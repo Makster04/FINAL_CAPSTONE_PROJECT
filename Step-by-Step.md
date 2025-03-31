@@ -28,10 +28,13 @@ Use **leading** indicators (e.g. sentiment, yield curve) as predictors and **rul
 | `Federal_Funds_Rate.csv` | Leading (policy-reactive) | Feature |
 | `Global_Supply_Chain_Pressure_Index.xls` | Leading | Feature |
 | `Crude_Oil_Prices.csv` | Contextual | Feature |
-
 | `Capacity_Utilization_Index.csv` | Coincident / Leading | Feature + Label Logic |
 | `Industrial_Production_Index.csv` | Coincident | Feature |
+<<<<<<< HEAD
 
+=======
+| `Real_Broad_Dollar_Index.csv` | Coincident | Feature |
+>>>>>>> a328553044e047109ab56b5d7970fe0657838abd
 | `PPI_Inflation_Rate.csv` | Lagging | Feature |
 | `CPI_Inflation_Rate.csv` | Lagging | Feature |
 | `Unemployment_Rate.csv` | Lagging | Feature |
