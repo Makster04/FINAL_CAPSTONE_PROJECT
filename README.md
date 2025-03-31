@@ -1,7 +1,3 @@
-Here’s your fully **merged and updated README** with the four-class target labels integrated and all necessary adjustments made throughout the document:
-
----
-
 # 📈 Economic Turn Classification Model Using Economic Indicators  
 ### *(Supervised Multi-Class Time Series ML Model)*  
 
