@@ -31,7 +31,6 @@ Use **leading** indicators (e.g. sentiment, yield curve) as predictors and **rul
 
 | `Capacity_Utilization_Index.csv` | Coincident / Leading | Feature + Label Logic |
 | `Industrial_Production_Index.csv` | Coincident | Feature |
-| `Real_Broad_Dollar_Index.csv` | Coincident | Feature |
 
 | `PPI_Inflation_Rate.csv` | Lagging | Feature |
 | `CPI_Inflation_Rate.csv` | Lagging | Feature |
