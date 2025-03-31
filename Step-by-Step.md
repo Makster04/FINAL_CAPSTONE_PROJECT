@@ -106,19 +106,86 @@ You’ll use a rule-based approach to assign quarterly regime labels.
 
 ---
 
+## 📍 Here’s your updated Capstone Roadmap with the **time-series evaluation metrics fully integrated** into Section 8. Everything is blended naturally into your existing structure:
+
+---
+
 ## 📍 8. Model Evaluation
-### Metrics:
+
+### 📊 Classification Metrics:
 - Accuracy, Precision, Recall, F1 per class  
 - ROC-AUC (macro + per-class)  
 - Confusion Matrix  
-- Time-aware metrics:
-  - F1 over time  
-  - Timeliness of regime switches (e.g. detect recession early?)
 
-### Visuals:
-- Timeline: predicted vs true regimes  
-- SHAP attribution per quarter  
-- Lead-time plots: how early does model see Slowdowns or Recessions?
+### 🕒 Time-Series Evaluation Metrics:
+
+Because this is a **sequential prediction task**, we go beyond traditional classification metrics to capture *when* a prediction is made — not just *what* is predicted.
+
+#### ⏱️ Lead Time Detection
+> **Goal**: Measure how early (or late) the model predicts an upcoming regime shift.
+
+- For each true regime transition (e.g., Stability → Recession), calculate:
+  - How many quarters ahead (or behind) the model made the correct switch.
+- Track **average lead time per regime** (positive = early detection).
+- Useful for evaluating early warning capability of the model.
+
+#### 🔄 Regime Transition vs Stability Accuracy
+> **Goal**: Check if the model performs better during transitions or in stable periods.
+
+- Define **transition periods** (±1 quarter from regime change).
+- Compute:
+  - `F1_Transition`: F1 Score during regime shifts
+  - `F1_Stable`: F1 Score during non-transition periods
+- Helps stakeholders understand reliability at turning points.
+
+#### 📈 Rolling F1 Over Time
+> **Goal**: Visualize how model performance evolves quarter-by-quarter.
+
+- Calculate a rolling F1 score over a window (e.g., 8 quarters).
+- Reveals drop-offs during recessions or shocks.
+- Add this curve to `evaluation.ipynb` and the dashboard.
+
+```python
+rolling_f1 = []
+window = 8
+for i in range(window, len(y_true)):
+    score = f1_score(y_true[i-window:i], y_pred[i-window:i], average='macro')
+    rolling_f1.append(score)
+```
+
+#### 📉 Prediction Volatility (Regime Stability Index)
+> **Goal**: Penalize models that switch regimes too frequently.
+
+- Count the number of predicted regime changes per year.
+- Compare to the ground truth frequency.
+- High volatility may indicate poor generalization or overreaction.
+
+```python
+def count_switches(seq):
+    return sum(1 for i in range(1, len(seq)) if seq[i] != seq[i-1])
+```
+
+#### 📊 Brier Score (Optional)
+> Evaluate probabilistic confidence in predictions (e.g., from Softmax or XGBoost).
+
+- Lower Brier score = better calibrated probabilities
+- Especially useful for stakeholder confidence in Recession probabilities
+
+```python
+from sklearn.metrics import brier_score_loss
+brier_score_loss(y_true == 'Recession', model.predict_proba(X)[:, index])
+```
+
+---
+
+### 📈 Visuals:
+- Timeline: predicted vs true regimes (with overlay)
+- SHAP attribution per quarter (feature importance evolution)
+- **Lead-time plots** per regime  
+- **Rolling F1 curve** (8-quarter window)  
+- **Transition vs Stability accuracy table**  
+- Prediction volatility comparison (true vs model switches per year)
+
 
 ---
 
