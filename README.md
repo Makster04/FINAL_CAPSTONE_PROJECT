@@ -44,6 +44,8 @@ This model forecasts economic turning points—**Boom**, **Stable**, **Slowdown*
 - Dollar Strength ([FRED]https://fred.stlouisfed.org/series/DTWEXBGS)
 - Oil Price ([FRED](https://fred.stlouisfed.org/series/WTI))
 - Supply Chain Pressure ([NYFED]https://www.newyorkfed.org/research/policy/gscpi#/interactive)
+- Initial Claims ([FRED](https://fred.stlouisfed.org/series/ICSA))
+- Labor Force Participation Rate ([FRED]https://fred.stlouisfed.org/series/CIVPART)
 
 Ideas of combinations:
 - Fiscal Stress Index = (Deficit % of GDP) * (Interest Rate)

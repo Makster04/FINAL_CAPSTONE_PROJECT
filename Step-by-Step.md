@@ -1,214 +1,224 @@
-Absolutely — here’s your **Step-by-Step Capstone Roadmap** now **integrated with the time-series metric evaluation and considerations** where relevant. Edits are embedded in context with ✅ additions clearly marked:
+Absolutely — here’s your **updated and fully merged roadmap** with everything from the detailed project writeup (data, modeling, labels, metrics, deliverables, etc.) now reflected within each section. This is your **authoritative, polished Capstone roadmap** ready for execution, demo, or publication ✅
 
 ---
 
-# ✅ Step-by-Step Capstone Roadmap (Time-Series Enhanced)
+# ✅ Step-by-Step Capstone Roadmap (Time-Series Enhanced + Feature-Complete)
 
 ## 📍 1. **Define the Problem & Scope**
-### 🎯 Goal
-> Predict the next quarter’s economic state (Boom, Stability, Slowdown, Recession) using time-lagged economic indicators.
+### 🎯 Goal  
+> Predict the next quarter’s economic state (**Boom**, **Stability**, **Slowdown**, or **Recession**) using lagged macroeconomic indicators.
 
-### ✅ Deliverables
+### ✅ Deliverables  
 - One-sentence predictive framing:  
   > “Using macroeconomic indicators from the past 4 quarters, can we predict the economic regime of the upcoming quarter?”
 - Business value rationale:  
-  > This model helps investors, policy makers, and CFOs anticipate shifts in the economy, enabling proactive decision-making.
+  > This model empowers stakeholders to navigate macro uncertainty by proactively adjusting financial, investment, and policy decisions.
+- Emphasize:  
+  - 4-class multi-class framing  
+  - Time-aware pipeline  
+  - Use cases: investors, CFOs, policymakers, media
 
 ---
 
 ## 📍 2. **Data Collection**
-### 🎯 Sources
-- FRED (e.g., GDP, unemployment, CPI, Fed Funds)
-- OECD (sentiment indices)
-- NY Fed (Supply Chain Pressure Index)
-- NBER (recession flags)
+### 🎯 Sources  
+- **FRED**: GDP, CPI, PPI, unemployment, jobs, rates, deficit, housing, yield spread  
+- **OECD**: Consumer and Business Confidence  
+- **NY Fed**: Global Supply Chain Pressure Index  
+- **NBER**: Recession dating  
+- **BEA, BLS, World Bank**: Official macro indicators  
 
-### ✅ Deliverables
-- `data/` folder with raw `.csv` files or `data_pull.py` for automated collection  
-- Documented in notebook and `README.md`  
-- Include `.gitignore` to exclude large files  
+### ✅ Deliverables  
+- `data/` folder with `.csv` files or `data_pull.py` (e.g., via `fredapi`, `pandas_datareader`)  
+- `.gitignore` for large files  
+- Data dictionary in `README.md` or notebook  
+- ✅ Visual map of sources → features  
 
 ---
 
 ## 📍 3. **Data Understanding & Exploration**
-### 🎯 Tasks
-- Clean time-series datasets, standardize time formats
-- Visualize trends, seasonality, missing data
-- Inspect for structural breaks (e.g., 2008, 2020)
-- ✅ Explore autocorrelation / seasonality / momentum patterns
+### 🎯 Tasks  
+- Clean time columns, align frequencies (e.g., quarterly)  
+- Visualize trends, breakpoints (e.g., 2008, 2020)  
+- Identify missing data & imputation needs  
+- ✅ Analyze:
+  - Seasonality
+  - Autocorrelation (ACF/PACF)
+  - Momentum / volatility  
 
-### ✅ Deliverables
-- EDA Notebook  
-- Visuals of economic indicators over time  
-- ✅ ACF/PACF plots (if applicable)  
-- Commented code + markdown narratives  
+### ✅ Deliverables  
+- EDA notebook with visuals (line plots, boxplots, histograms)  
+- ✅ Timeline showing historical shocks (recessions, COVID)  
+- ✅ SHAP-style or exploratory feature-target insights  
 
 ---
 
 ## 📍 4. **Label Engineering**
-### 🎯 Tasks
-- Define 4-class regime: Boom, Stability, Slowdown, Recession  
-- Options:
-  - Rule-based thresholds (GDP, Unemployment, PMI)
-  - NBER-recession-flag overlay (https://fred.stlouisfed.org/series/USREC)
-  - Optional: Unsupervised clustering to find organic regime patterns
-- ✅ Check class balance and time-period coverage (do each regime appear in each decade?)
+### 🎯 Label Options  
+- **Rule-Based**:
+  - Boom: GDP > 3%, low unemployment  
+  - Stability: 1–3% GDP, neutral indicators  
+  - Slowdown: GDP ~0–1%, rising unemployment  
+  - Recession: GDP < 0 two quarters, NBER-flagged  
+- ✅ Option: Overlay unsupervised clustering to validate regimes
 
-### ✅ Deliverables
-- `labeling_logic.py` or inline notebook section  
-- Visual timeline (1970–2023) showing regime classification  
-- ✅ Label frequency plot and decade-wise distribution  
+### ✅ Deliverables  
+- `labeling_logic.py` script with modular logic  
+- Visual: economic regime timeline (1970–2023)  
+- ✅ Regime frequency histogram (check class balance per decade)  
 
 ---
 
 ## 📍 5. **Feature Engineering**
-### 🎯 Techniques
-- Lagging (1–4 quarters back)
-- Rolling means / differences
-- Fiscal stress index, yield spread, interaction terms
-- Normalize or standardize features
-- ✅ Consider adding cumulative change, momentum flags, or volatility proxies
+### 🎯 Techniques  
+- Lagged features: 1–4 quarters  
+- Rolling means, % changes, differences  
+- ✅ Derived features:
+  - Fiscal Stress Index = (Deficit % of GDP) × (Interest Rate)  
+  - Yield Curve Spread  
+  - Momentum flags, volatility proxies  
+- Normalize or z-score scale
 
-### ✅ Deliverables
-- `features.py` script or notebook cell  
-- Table or plot showing top indicators for each class  
-- ✅ Feature importance correlation heatmap or SHAP preview  
+### ✅ Deliverables  
+- `features.py` or notebook  
+- ✅ Feature importance heatmap / correlation matrix  
+- ✅ SHAP bar chart preview (early-stage explainability)  
 
 ---
 
 ## 📍 6. **Train-Test Split (Time-Aware)**
-### 🎯 Strategy
-- Chronological: Train (1970–2010), Test (2011–2023)
-- No future leakage
-- ✅ Use sliding windows to simulate “quarterly forecasting”  
-- ✅ Avoid using test data in any rolling averages
+### 🎯 Strategy  
+- Chronological split (e.g., Train: 1970–2010 | Test: 2011–2023)  
+- ✅ Rolling forecasting window (simulate quarterly prediction)  
+- Avoid leakage: no peeking into future indicators  
 
-### ✅ Deliverables
-- `train_test_split_time.py` or notebook section  
-- Explanation + timeline visualization  
-- ✅ Optional: visualization showing model only sees past data at each step  
+### ✅ Deliverables  
+- Timeline visualization of train/test split  
+- ✅ Sliding window logic for sequential models  
+- ✅ Diagram of forecasting pipeline: past → predict next  
 
 ---
 
 ## 📍 7. **Baseline & Modeling**
-### 🎯 Models
-- Baseline: Softmax Logistic Regression  
-- Tree-based: Random Forest, XGBoost  
-- Sequential: LSTM/GRU (optional)
-- Tune for recall of Recession class
-- ✅ Use time sequences (4–6 quarters) as input window for LSTM/GRU
+### 🎯 Models  
+- Baseline: **Softmax Logistic Regression** (interpretable)  
+- Tree-based: **Random Forest**, **XGBoost**, **LightGBM**  
+- Deep time models: **LSTM/GRU**, optional **Temporal Attention**  
+- ✅ Optional pre-modeling with **ARIMA / Prophet** for forecasting inputs  
 
-### ✅ Deliverables
+### ✅ Deliverables  
 - `modeling.ipynb`  
-- Model comparison table (Accuracy, F1, AUC per class)  
-- SHAP charts (if applicable)  
-- ✅ Optional: Comparison of static vs. time-aware model performance  
+- Comparison table (Accuracy, F1, AUC by class)  
+- ✅ Time-aware model comparison (with vs. without lags)  
+- ✅ Hyperparameter tuning for class imbalance  
 
 ---
 
 ## 📍 8. **Model Evaluation**
-### 🎯 Metrics
-- Overall accuracy  
-- Per-class precision/recall/F1  
-- Confusion matrix  
-- ROC-AUC for each class  
-- ✅ *Time-Series Specific Metrics*:
-  - Accuracy / F1 per year or quarter (e.g., performance over time)
-  - Prediction timeliness (how early it detects a Recession)
-  - Sequence accuracy (for LSTM: full sequence predicted correctly?)
-  - Class drift: does model overpredict Boom or miss Recession?
+### 🎯 Metrics  
+- Accuracy, Precision, Recall, F1 per class  
+- Confusion Matrix  
+- ROC-AUC (one-vs-rest for multi-class)  
+- ✅ *Time-Series Metrics*:
+  - Accuracy per year  
+  - Timeliness (e.g., lead time on Recession)  
+  - Sequence-level accuracy (for LSTM)  
+  - Class drift: overpredict Boom? Miss Recession?
 
-### ✅ Deliverables
-- Evaluation notebook or section  
-- Visuals (confusion matrix, bar charts for F1)  
-- ✅ Time-series accuracy line chart (year-by-year or regime-by-regime)  
-- ✅ Timeliness heatmap (actual vs. predicted lead time)  
-- Interpretation of misclassifications  
+### ✅ Deliverables  
+- Confusion matrix + bar charts  
+- ✅ Line chart: F1-score over time  
+- ✅ Timeliness heatmap (actual vs predicted class per quarter)  
+- Error analysis + interpretation  
 
 ---
 
 ## 📍 9. **Business Impact & Recommendations**
-### 🎯 Answer:
-- How can this model be used by investors/CFOs/policymakers?
-- What are its limitations (e.g., data lag, global shocks)?
-- ✅ Highlight risks of misclassification (e.g., missing a Recession)
-- ✅ Suggest confidence thresholds for high-stakes decisions
+### 🎯 Focus  
+- Use cases per stakeholder:  
+  - Investors: Asset allocation  
+  - CFOs: Capex/Hiring/Planning  
+  - Policy: Monetary/fiscal levers  
+- ✅ Limitations: data delay, geopolitical shocks  
+- ✅ Decision thresholds for high-confidence use  
 
-### ✅ Deliverables
-- Conclusion in notebook  
-- Actionable takeaway for each predicted class  
-- ✅ Visual for use-case by sector (Investor, CFO, Fed, etc.)
+### ✅ Deliverables  
+- Summary narrative + actionable insights  
+- ✅ Use-case matrix (stakeholder → prediction → decision)  
 
 ---
 
 ## 📍 10. **Final Notebook + GitHub Repo Setup**
-### 🎯 Structure
 ```
 project-root/
 │
-├── README.md  ✅
+├── README.md ✅
 ├── .gitignore
-├── data/      (raw & processed)
+├── data/
 ├── notebooks/
 │   ├── eda.ipynb
+│   ├── labeling.ipynb
 │   ├── feature_engineering.ipynb
 │   ├── modeling.ipynb ✅
+│   ├── evaluation.ipynb ✅
 │   └── final_notebook.ipynb ✅
 ├── presentation/
 │   └── Economic_Turn_Classification_Presentation.pdf ✅
+├── scripts/
+│   ├── data_pull.py
+│   ├── labeling_logic.py
+│   └── features.py
 ```
 
-### ✅ Deliverables
-- Clean, runnable final notebook  
-- Clear repo structure  
-- README.md with:
-  - 📌 Project title  
-  - 🔍 Elevator pitch  
-  - 📷 Header image  
-  - 📈 Visuals & links  
-  - 💡 Business context + modeling summary  
-  - 🔗 Navigation + reproduction instructions  
-  - ✅ Evaluation section explaining time-series metrics used  
+### ✅ Deliverables  
+- Full repo structure with reproducible workflow  
+- README.md with:  
+  - 📌 Project summary  
+  - 🎯 Problem framing  
+  - 🛠️ Tools used  
+  - 📈 Visuals  
+  - ✅ Time-series metrics breakdown  
 
 ---
 
 ## 📍 11. **Non-Technical Presentation**
-### 🎯 Format
-- Short intro: “I’m a data scientist with a background in...”  
-- Context → Data → Modeling → Results → Use Case
+### 🎯 Format  
+- Audience: stakeholders (investors, execs, analysts)  
+- Clear narrative: Context → Data → Prediction → Action
 
-### ✅ Deliverables
-- 8–10 slides (PDF or Google Slides)  
-- Include:
-  - Economic context and need  
-  - Model overview  
-  - Performance summary  
-  - SHAP or interpretability  
-  - ✅ Visual: what the model saw over 4 quarters to predict "Recession"  
-  - Dashboard preview (optional)  
-  - Real-world applications  
+### ✅ Deliverables  
+- 8–10 slides (PDF, Google Slides, or PowerPoint)  
+- ✅ Include:
+  - Economic uncertainty context  
+  - Visual: what model “sees” before a recession  
+  - Dashboard or sample prediction UI  
+  - Business decisions enabled per regime  
 
 ---
 
 ## 📍 12. **(Optional) Streamlit Dashboard**
-> Optional but impressive
-
-### ✅ Includes:
-- Dropdowns to select time ranges or variables  
-- Quarterly forecast + probability  
-- SHAP graph or time-series chart  
-- ✅ Toggle to display “prediction lead time”  
-- ✅ Slider to select lag window (e.g., 4 vs 6 quarters)
+### 🎯 Features  
+- Select lags (4 vs 6 quarters)  
+- Dropdown: select time window or indicators  
+- Display:
+  - Prediction + probabilities  
+  - SHAP value timeline  
+  - ✅ Toggle: lead time vs regime accuracy  
+  - ✅ Input: confidence threshold for warnings
 
 ---
 
-## ⏳ Sample Timeline (if you’re on a 1-week deadline)
-| Day | Task |
-|-----|------|
-| 1 | Finalize problem framing, collect raw data |
-| 2 | Clean + EDA + label engineering |
-| 3 | Feature engineering + modeling baseline |
-| 4 | Modeling + evaluation (include time-aware metrics) |
-| 5 | SHAP + interpretation + dashboard (optional) |
-| 6 | Final notebook + README.md |
-| 7 | Non-technical deck + GitHub polish |
+## ⏳ Sample 1-Week Timeline
+| Day | Tasks |
+|-----|-------|
+| 1 | Finalize problem framing, gather & align data |
+| 2 | Data cleaning, EDA, label engineering |
+| 3 | Feature engineering + baseline modeling |
+| 4 | Deep modeling (XGBoost / LSTM) + time metrics |
+| 5 | Evaluation + SHAP analysis |
+| 6 | Final notebooks, README, dashboard (optional) |
+| 7 | Non-tech slides, use-case writeups, GitHub polish ✅ |
+
+---
+
+Let me know if you'd like help turning this into a polished PDF, GitHub `README.md`, or visual roadmap!
