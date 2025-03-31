@@ -1,7 +1,3 @@
-Absolutely — here’s the updated version of your README with a polished and merged **“Time-Series Model”** section integrated seamlessly into the existing structure. I've made the time-series modeling methods feel more central and coherent with your economic classification narrative:
-
----
-
 # 📈 Economic Turn Classification Model Using Economic Indicators  
 ### *(Supervised Multi-Class Time Series ML Model)*  
 
@@ -34,7 +30,7 @@ This model forecasts economic turning points—**Boom**, **Stable**, **Slowdown*
 
 ### 🔍 **Input Features** (lagged):  
 
-- GDP Growth Rate (QoQ, YoY)  
+- GDP Growth Rate (QoQ, YoY) ([FRED]https://fred.stlouisfed.org/series/GDPC1#)
 - Unemployment Rate  ([FRED](https://fred.stlouisfed.org/series/UNRATE))  
 - Federal Funds Rate / Prime Rate  ([FRED](https://fred.stlouisfed.org/series/FEDFUNDS))  
 - Jobs Added ([FRED]https://fred.stlouisfed.org/series/PAYEMS#)
@@ -44,9 +40,13 @@ This model forecasts economic turning points—**Boom**, **Stable**, **Slowdown*
 - Consumer Sentiment Index ([OECD](https://www.oecd.org/en/data/indicators/consumer-confidence-index-cci.html))  
 - Business Sentiment Index ([OECD](https://www.oecd.org/en/data/indicators/business-confidence-index-bci.html))  
 - PMI (Manufacturing & Services), Housing Starts ([FRED](https://fred.stlouisfed.org/series/HOUST))  
-- Dollar strength ([FRED]https://fred.stlouisfed.org/series/DTWEXBGS)
+- Federal Deficit % of GDP ([FRED]https://fred.stlouisfed.org/series/FYFSGDA188S)
+- Dollar Strength ([FRED]https://fred.stlouisfed.org/series/DTWEXBGS)
 - Oil Price ([FRED](https://fred.stlouisfed.org/series/WTI))
 - Supply Chain Pressure ([NYFED]https://www.newyorkfed.org/research/policy/gscpi#/interactive)
+
+Ideas of combinations:
+- Fiscal Stress Index = (Deficit % of GDP) * (Interest Rate)
 
 > *Includes lags, rolling windows, and optional seasonal decomposition.*  
 
