@@ -87,7 +87,6 @@ This becomes your **target risk score** (between 0–1 or scaled appropriately).
 | **Jobs Momentum** | ∆Jobs / ∆Unemployment |
 | **Inventory-to-Sales Ratio** | Inventories / Retail Sales |
 | **Volatility Shock** | QoQ % Change in VIX |
-| **Yield Curve Inversion** | 10Y – 2Y spread (negative = inverted)
 
 📌 Use retrospective analysis to confirm which of these **consistently shift** before past downturns.
 
@@ -116,17 +115,6 @@ This becomes your **target risk score** (between 0–1 or scaled appropriately).
 
 ## 📍 7. Forecasting Logic  
 
-- Use **sliding window**: Past 4 quarters → Predict next quarter’s recession risk score  
-- Optionally forecast 2–3 quarters ahead using autoregressive structure  
-- Add ensemble averaging across time horizons (1Q, 2Q, 3Q risk)  
-
-📌 Compare current predictions to **historical risk levels** during 2001, 2008, and 2020 recessions to understand similarity patterns.
-
-Here’s your **updated roadmap** with a clean and concise section added on **Train-Test Splitting and Model Validation**, placed right after **Section 7: Forecasting Logic**, where it naturally fits in the pipeline. This new **Section 7.1** includes train/test strategy, regression metrics, and optional binary evaluation for stakeholder alignment.
-
----
-
-## 📍 7. Forecasting Logic  
 
 - Use **sliding window**: Past 4 quarters → Predict next quarter’s recession risk score  
 - Optionally forecast 2–3 quarters ahead using autoregressive structure  
