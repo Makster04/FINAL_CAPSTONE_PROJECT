@@ -24,7 +24,6 @@ Use **leading** indicators (e.g. sentiment, yield curve) as predictors and **rul
 | `Housing_Starts.csv` | Leading | Feature |
 | `Yield_Curve.csv` | Leading | Feature |
 | `Federal_Funds_Rate.csv` | Leading (policy-reactive) | Feature |
-| `Global_Supply_Chain_Pressure_Index.xls` | Leading | Feature |
 | `Crude_Oil_Prices.csv` | Contextual | Feature |
 | `Capacity_Utilization_Index.csv` | Coincident / Leading | Feature + Label Logic |
 | `Industrial_Production_Index.csv` | Coincident | Feature |
@@ -72,7 +71,6 @@ You’ll use a rule-based approach to assign quarterly regime labels.
 - Engineer rolling statistics:  
   - Rolling averages, % changes, volatility  
 - Build derived features:
-  - `Yield Spread` = 10Y – 2Y  
   - `Fiscal Stress Index` = (Deficit % GDP) × (Interest Rate)  
   - `Inflation Gap` = PPI – CPI  
   - `Jobs Momentum` = ∆Jobs_Added / ∆Unemployment  
