@@ -1,469 +1,264 @@
-
-# ✅ Capstone Roadmap: Economic Turn Prediction Model  
-*Predict next quarter’s macroeconomic regime: Boom, Stability, Slowdown, or Recession*
+Absolutely — here’s your **updated roadmap** with concise and powerful additions to incorporate **pre-recession historical analysis** where it fits naturally. This will boost your project's credibility, interpretability, and marketability — without adding bloat.
 
 ---
 
-## 📍 1. Define the Problem & Scope
-### 🎯 Goal  
-> Predict the next quarter's economic regime using lagged macroeconomic indicators.
-
-### 🔍 Key Idea:
-Use **leading** indicators (e.g. sentiment, yield curve) as predictors and **rule-based logic** on lagging indicators (e.g. GDP, unemployment, CU) to define economic regimes — no NBER dependency.
-
----
-
-## 📍 2. Data Collection
-### 🧾 Included Datasets:
-| File Name | Type | Use |
-|-----------|------|-----|
-| `Consumer_Confidence_Index.csv` | Leading | Feature |
-| `Business_Confidence_Index.csv` | Leading | Feature |
-| `Initial_Claims.csv` | Leading | Feature |
-| `Jobs_Added.csv` | Leading | Feature |
-| `Housing_Starts.csv` | Leading | Feature |
-| `Yield_Curve.csv` | Leading | Feature |
-| `Federal_Funds_Rate.csv` | Leading (policy-reactive) | Feature |
-| `Crude_Oil_Prices.csv` | Contextual | Feature |
-| `Capacity_Utilization_Index.csv` | Coincident / Leading | Feature + Label Logic |
-| `Industrial_Production_Index.csv` | Coincident | Feature |
-
-
-| `PPI_Inflation_Rate.csv` | Lagging | Feature |
-| `CPI_Inflation_Rate.csv` | Lagging | Feature |
-| `Unemployment_Rate.csv` | Lagging | Feature |
-| `Labor_Force_Participation.csv` | Lagging | Feature |
-| `Real_Gross_Domestic_Product.csv` | Lagging | **Label source** |
-| `Deficit_Percent_GDP.csv` | Lagging | Feature (used in derived fiscal stress index) |
-
----
-
-## 📍 3. Data Understanding & EDA
-- Align all indicators to a **quarterly frequency**
-- Visualize indicator trends and shock periods (2001, 2008, 2020)
-- Group indicators by type (leading, lagging, coincident)
-- Analyze **lead-lag behavior** visually: which indicators show early shifts?
-
-**Deliverables:**
-- Line charts: indicators over time with **color-coded regime overlays**
-- ACF/PACF on momentum indicators
-- Breakpoint detection (e.g., major recession pivots)
-
----
-
-## 📍 4. Label Engineering (Rule-Based Only)
-You’ll use a rule-based approach to assign quarterly regime labels.
-
-| Regime | GDP | Unemployment | Capacity Utilization |
-|--------|-----|--------------|------------------------|
-| **Boom** | >3% | Low & falling | >80% |
-| **Stability** | 1–3% | Stable | ~75–80% |
-| **Slowdown** | 0–1% | Rising | Falling |
-| **Recession** | <0% for 2+ quarters | High | <75% |
-
-📌 **No NBER recession flags used.**  
-📌 Optional: Use clustering (e.g. KMeans, HMM) to validate label quality.
-
----
-
-## 📍 5. Feature Engineering
-- Create **1–4 quarter lags** for all inputs  
-- Engineer rolling statistics:  
-  - Rolling averages, % changes, volatility  
-- Build derived features:
-  - `Fiscal Stress Index` = (Deficit % GDP) × (Interest Rate)  
-  - `Inflation Gap` = PPI – CPI  
-  - `Jobs Momentum` = ∆Jobs_Added / ∆Unemployment  
-
-**Normalize** via z-score scaling for all numeric features
-
----
-
-## 📍 6. Train-Test Split
-- Use a **chronological split** (e.g., Train: 1970–2010 | Test: 2011–2023)
-- Simulate forecasting via **sliding windows**:  
-  - e.g., past 4 quarters → predict next quarter’s regime
-- Prevent leakage from future signals
-
----
-
-## 📍 7. Modeling
-### Model Types:
-- **Logistic Regression (Softmax)** — baseline  
-- **Random Forest / XGBoost / LightGBM** — high-performance with SHAP  
-- **LSTM / Temporal CNN** — optional deep sequence modeling  
-- **Prophet/ARIMA** — optional input forecasting
-
-📌 Compare model performance:
-- With vs without leading indicators  
-- With vs without fiscal/monetary stress proxies  
-- Using only interpretable vs sequential architectures
-
----
-
-## 📍 Here’s your updated Capstone Roadmap with the **time-series evaluation metrics fully integrated** into Section 8. Everything is blended naturally into your existing structure:
-
----
-
-## 📍 8. Model Evaluation
-
-### 📊 Classification Metrics:
-- Accuracy, Precision, Recall, F1 per class  
-- ROC-AUC (macro + per-class)  
-- Confusion Matrix  
-
-### 🕒 Time-Series Evaluation Metrics:
-
-Because this is a **sequential prediction task**, we go beyond traditional classification metrics to capture *when* a prediction is made — not just *what* is predicted.
-
-#### ⏱️ Lead Time Detection
-> **Goal**: Measure how early (or late) the model predicts an upcoming regime shift.
-
-- For each true regime transition (e.g., Stability → Recession), calculate:
-  - How many quarters ahead (or behind) the model made the correct switch.
-- Track **average lead time per regime** (positive = early detection).
-- Useful for evaluating early warning capability of the model.
-
-#### 🔄 Regime Transition vs Stability Accuracy
-> **Goal**: Check if the model performs better during transitions or in stable periods.
-
-- Define **transition periods** (±1 quarter from regime change).
-- Compute:
-  - `F1_Transition`: F1 Score during regime shifts
-  - `F1_Stable`: F1 Score during non-transition periods
-- Helps stakeholders understand reliability at turning points.
-
-#### 📈 Rolling F1 Over Time
-> **Goal**: Visualize how model performance evolves quarter-by-quarter.
-
-- Calculate a rolling F1 score over a window (e.g., 8 quarters).
-- Reveals drop-offs during recessions or shocks.
-- Add this curve to `evaluation.ipynb` and the dashboard.
-
-```python
-rolling_f1 = []
-window = 8
-for i in range(window, len(y_true)):
-    score = f1_score(y_true[i-window:i], y_pred[i-window:i], average='macro')
-    rolling_f1.append(score)
-```
-
-#### 📉 Prediction Volatility (Regime Stability Index)
-> **Goal**: Penalize models that switch regimes too frequently.
-
-- Count the number of predicted regime changes per year.
-- Compare to the ground truth frequency.
-- High volatility may indicate poor generalization or overreaction.
-
-```python
-def count_switches(seq):
-    return sum(1 for i in range(1, len(seq)) if seq[i] != seq[i-1])
-```
-
-#### 📊 Brier Score (Optional)
-> Evaluate probabilistic confidence in predictions (e.g., from Softmax or XGBoost).
-
-- Lower Brier score = better calibrated probabilities
-- Especially useful for stakeholder confidence in Recession probabilities
-
-```python
-from sklearn.metrics import brier_score_loss
-brier_score_loss(y_true == 'Recession', model.predict_proba(X)[:, index])
-=======
-Absolutely — here’s your full **step-by-step Capstone Roadmap**, cleanly rewritten and enhanced to reflect your **probability-based time series classification**, including both traditional and **time-aware evaluation metrics**.
-
----
-
-# ✅ Capstone Roadmap: Economic Regime Forecasting (with Recession Probability)
-*Predict next quarter’s economic state with class probabilities: Boom, Stability, Slowdown, or Recession*
+# ✅ Capstone Roadmap: Recession Risk Forecasting (Unsupervised / Continuous)  
+*Forecast the next quarter’s recession probability-like risk score using macroeconomic signals*
 
 ---
 
 ## 📍 1. Define the Problem & Scope  
+
 ### 🎯 Goal  
-> Predict the **probability** of each economic regime (Boom, Stability, Slowdown, Recession) for the **next quarter**, using the past 4 quarters of macroeconomic data.
+> Forecast a **continuous score** representing **economic fragility** or **recession risk** in the **next quarter**, using past 4 quarters of macro indicators.
 
 ### 🔍 Key Insight  
-Use **lagged macro indicators** (leading, coincident, lagging) to capture early warning signals — completely independent of NBER labels.
+Instead of hard classification into discrete regimes, we learn a **smooth risk signal** that rises/falls as economic fundamentals deteriorate or strengthen — using regression, distance models, or latent representations.
 
 ---
 
 ## 📍 2. Data Collection  
-### 🧾 Datasets & Categories  
 
-| Indicator | Type | Usage |
-|----------|------|-------|
-| Consumer/Business Confidence | Leading | Feature |
-| Yield Curve, Federal Funds Rate | Leading | Feature |
-| Initial Jobless Claims, Jobs Added | Leading | Feature |
-| Housing Starts, Oil Prices | Leading/Contextual | Feature |
-| Capacity Utilization, Industrial Production | Coincident | Feature + Label Logic |
-| CPI, PPI, Unemployment, Labor Force Participation | Lagging | Feature |
-| Real GDP Growth | Lagging | Label source |
-| Deficit as % of GDP | Lagging | Derived Feature |
+### 📦 Categorized Economic Indicators with Timing Classification
+
+| Theme                  | Indicators                                             | Type       |
+|------------------------|--------------------------------------------------------|------------|
+| **Confidence & Sentiment** | Consumer Confidence, Business Confidence               | **Leading**   |
+| **Labor Market**       | Jobs Added, Unemployment Rate, Labor Force Participation | Jobs Added: **Leading**<br>Unemployment: **Lagging**<br>Labor Force Participation: **Lagging** |
+| **Inflation**          | CPI, PPI                                               | CPI: **Lagging**<br>PPI: **Leading** |
+| **Rates & Policy**     | Fed Funds Rate, Yield Curve Spread                     | Fed Funds Rate: **Lagging** (Policy-Reactive)<br>Yield Curve Spread: **Leading** |
+| **Real Economy**       | Housing Starts, Durable Goods Orders, Capacity Utilization | Housing Starts: **Leading**<br>Durable Goods Orders: **Leading**<br>Capacity Utilization: **Coincident** |
+| **Production**         | Industrial Production                                  | **Coincident** |
+| **Fiscal Stress**      | Deficit % GDP, Corporate Bond Spreads                  | Both: **Lagging** |
+| **Liquidity**          | Real M2 Stocks                                         | **Lagging** |
+| **Sales/Inventory**    | Business Inventories, Retail Sales                     | Inventories: **Lagging**<br>Retail Sales: **Coincident** |
+| **Volatility**         | Volatility Index (VIX)                                 | **Leading** (sentiment proxy) |
+
+---
+
+📌 Tip: These datasets can also be used for **retrospective validation** — analyzing how indicators behaved 4 quarters before past recessions (e.g., 2001, 2008, 2020).
 
 ---
 
 ## 📍 3. Data Understanding & EDA  
-- Align all indicators to a **quarterly frequency**  
-- Visualize **historical shocks** (e.g. 1980, 2001, 2008, 2020)  
-- Group features by lead/lag classification  
-- Analyze **lead-lag behavior** visually across turning points  
-- Identify potential breakpoints using rolling momentum or changepoints
 
-**Deliverables:**
-- Indicator trendlines with regime overlays  
-- ACF/PACF analysis for momentum signals  
-- Heatmaps of lead-lag signal strength
+- Convert all indicators to **quarterly frequency**  
+- Plot historical **economic shocks** and overlay indicators  
+- Create **z-scored time series** for comparison  
+- Calculate **lag correlations** with NBER recessions or GDP drops  
+- Explore feature clusters using PCA or TSNE  
+
+📌 Optional: Build **"pre-recession snapshots"** to see how macro indicators behaved in the 4–5 quarters prior to known recessions — useful for building trust in your model’s logic.
 
 ---
 
-## 📍 4. Label Engineering (Rule-Based Regimes)  
+## 📍 4. Construct Recession Risk Proxy (Optional)  
 
-| Regime | GDP | Unemployment | Capacity Utilization |
-|--------|-----|--------------|------------------------|
-| **Boom** | >3% | Falling | >80% |
-| **Stability** | 1–3% | Stable | ~75–80% |
-| **Slowdown** | 0–1% | Rising | Falling |
-| **Recession** | <0% (2+ quarters) | High | <75% |
+If you want to **train a regression model**, construct a soft "target" using interpretable macro rules:
 
-📌 No dependency on NBER tags  
-📌 Optionally validate label quality via clustering (KMeans, HMM, GMM)
+```python
+proxy_recession_risk = (
+    0.25 * zscore(1 - capacity_utilization) +
+    0.25 * zscore(unemployment_rate) +
+    0.20 * zscore(deficit_percent_gdp * interest_rate) +
+    0.15 * zscore(inventory_to_sales_ratio) +
+    0.15 * zscore(vix)
+)
+```
+
+This becomes your **target risk score** (between 0–1 or scaled appropriately).  
+📌 Validate this score by comparing it against real-world pre-recession periods.
 
 ---
 
 ## 📍 5. Feature Engineering  
-- Create **lags**: 1–4 quarters for all indicators  
-- Engineer derived variables:
-  - Yield Spread = 10Y – 2Y  
-  - Fiscal Stress = Deficit % GDP × Interest Rate  
-  - Inflation Gap = PPI – CPI  
-  - Jobs Momentum = ΔJobs / ΔUnemployment  
-- Add rolling statistics: % change, moving average, std  
-- Normalize features using z-score scaling  
+
+### 🧠 Lags & Temporal Dynamics  
+- Lag features by 1–4 quarters  
+- Use rolling % changes, volatility, z-score normalization  
+
+### ⚙️ Derived Features  
+
+| Feature | Formula |
+|--------|---------|
+| **Fiscal Stress Index** | Deficit % GDP × Interest Rate |
+| **Inflation Gap** | PPI – CPI |
+| **Liquidity Shock** | ΔM2 QoQ |
+| **Jobs Momentum** | ∆Jobs / ∆Unemployment |
+| **Inventory-to-Sales Ratio** | Inventories / Retail Sales |
+| **Volatility Shock** | QoQ % Change in VIX |
+| **Yield Curve Inversion** | 10Y – 2Y spread (negative = inverted)
+
+📌 Use retrospective analysis to confirm which of these **consistently shift** before past downturns.
 
 ---
 
-## 📍 6. Train-Test Split  
-- Use **chronological split** to avoid leakage  
-  - Example: Train = 1970–2010, Test = 2011–2023  
-- Simulate real-time prediction with a **sliding window**:  
-  - e.g., last 4 quarters → predict next  
-- Maintain **time-aware folds** if doing cross-validation  
+## 📍 6. Modeling Options  
+
+### 🧰 If Using Regression  
+| Model | Notes |
+|-------|-------|
+| **XGBoostRegressor / LightGBM** | Strong performance, easy SHAP |
+| **Random Forest Regressor** | Ensemble baseline |
+| **LSTM / Temporal CNN Regressor** | Capture sequence patterns |
+| **Bayesian Ridge / BSTS** | Include uncertainty bands |
+| **VAR** | For economic system dynamics |
+| **SHAP / LIME** | Add interpretability  
+
+### 🧰 If Using Unsupervised / Distance-Based  
+| Model | Purpose |
+|-------|---------|
+| **Autoencoder / PCA** | Learn typical “healthy” quarters, score deviations |
+| **KMeans / DBSCAN** | Cluster pre-recession patterns, compute distance |
+| **Mahalanobis Distance** | Distance from historical “stable” center |
 
 ---
 
-## 📍 7. Modeling  
-### 🎯 Objective: Predict class probabilities
+## 📍 7. Forecasting Logic  
 
-### Models to Train:
-| Model | Description |
-|-------|-------------|
-| Softmax Logistic Regression | Interpretable baseline |
-| XGBoost / LightGBM | Powerful tree-based models with `predict_proba()` |
-| Random Forest | Good for feature ranking and probability calibration |
-| LSTM / Temporal CNN | Optional: sequence-aware deep learning |
-| SHAP / LIME | Global & local model interpretability |
+- Use **sliding window**: Past 4 quarters → Predict next quarter’s recession risk score  
+- Optionally forecast 2–3 quarters ahead using autoregressive structure  
+- Add ensemble averaging across time horizons (1Q, 2Q, 3Q risk)  
 
-📌 Prioritize **recession recall** and **probability calibration**  
-📌 Compare setups: leading-only vs full features, simple vs sequential models
+📌 Compare current predictions to **historical risk levels** during 2001, 2008, and 2020 recessions to understand similarity patterns.
+
+Here’s your **updated roadmap** with a clean and concise section added on **Train-Test Splitting and Model Validation**, placed right after **Section 7: Forecasting Logic**, where it naturally fits in the pipeline. This new **Section 7.1** includes train/test strategy, regression metrics, and optional binary evaluation for stakeholder alignment.
 
 ---
 
-## 📍 8. Model Evaluation  
+## 📍 7. Forecasting Logic  
 
-### 📊 Classification Metrics
-- Accuracy  
-- Precision / Recall / F1 Score per class  
-- ROC AUC (macro and per-class)  
-- Confusion Matrix  
+- Use **sliding window**: Past 4 quarters → Predict next quarter’s recession risk score  
+- Optionally forecast 2–3 quarters ahead using autoregressive structure  
+- Add ensemble averaging across time horizons (1Q, 2Q, 3Q risk)  
+
+📌 Compare current predictions to **historical risk levels** during 2001, 2008, and 2020 recessions to understand similarity patterns.
 
 ---
 
-### 🕒 Time-Series Evaluation Metrics  
+## 📍 7.1 Train-Test Strategy & Validation Metrics ✅  
 
-#### ⏱️ Lead Time Detection  
-- **When** does the model detect a regime change vs **when it actually occurs**  
-- Track average **lead time per regime**, especially for Recession  
+To ensure real-world usability and avoid leakage, use a **chronological train/test split**:
 
-#### 🔁 Transition vs Stability Accuracy  
-- Segment evaluation into:
-  - **Transition periods**: within ±1 quarter of a regime switch  
-  - **Stable periods**: steady regimes  
-- Compare `F1_transition` vs `F1_stable`
+- Example: Train = 1970–2010, Test = 2011–2024  
+- Use **sliding windows** to simulate forecasting:  
+  `X = past 4 quarters → y = risk next quarter`
 
-#### 📈 Rolling F1 Score  
+### ✅ Core Metrics (Regression)
+
+| Metric | Use |
+|--------|-----|
+| **MAE / RMSE** | Accuracy of predicted vs proxy scores |
+| **R² Score** | How well model explains variance in risk |
+| **MAPE** | If your risk score is scaled 0–100% |
+
 ```python
-# 8-quarter rolling F1
-for i in range(8, len(y_true)):
-    f1 = f1_score(y_true[i-8:i], y_pred[i-8:i], average='macro')
-    rolling_f1.append(f1)
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+mae = mean_absolute_error(y_true, y_pred)
+rmse = mean_squared_error(y_true, y_pred, squared=False)
+r2 = r2_score(y_true, y_pred)
 ```
 
-#### 🔄 Regime Stability Index  
-- Count **model-predicted regime switches** vs ground truth  
-- Penalize unnecessary over-switching (volatility = noise)
+### ⚠️ Optional: Binary Evaluation (if comparing to real recessions)
+
+If you want to measure how well your score **flags true recessions**, convert it to binary:
 
 ```python
-def count_switches(seq):
-    return sum(seq[i] != seq[i-1] for i in range(1, len(seq)))
+y_pred_binary = (y_pred > 0.6).astype(int)
 ```
 
-#### 🎯 Brier Score (Optional)  
-- For probability calibration of class predictions  
-- Especially valuable for **P(Recession)** and dashboard risk meters
+Then calculate:
+- **Precision / Recall / F1**
+- **ROC AUC**
+- Compare lead time to real NBER-defined downturns
 
-```python
-brier_score_loss(y_true == 'Recession', model.predict_proba(X)[:, 3])
->>>>>>> 2887537 (Initial commit)
-```
-
-
-### 📈 Visuals:
-- Timeline: predicted vs true regimes (with overlay)
-- SHAP attribution per quarter (feature importance evolution)
-- **Lead-time plots** per regime  
-- **Rolling F1 curve** (8-quarter window)  
-- **Transition vs Stability accuracy table**  
-- Prediction volatility comparison (true vs model switches per year)
-
+📌 This step helps justify the model to non-technical stakeholders.
 
 ---
 
-## 📍 9. Business Impact
-### Stakeholder Use Cases:
-- **Investors**: Allocate risk based on regime probability  
-- **CFOs**: Adjust hiring, CAPEX with macro guidance  
-- **Policymakers**: Use early warnings from CU, Confidence, and Jobs  
+## 📍 8. Evaluation Strategy  
 
-### Limitations:
-- Data latency (some indicators delayed)  
-- Regime boundaries can be fuzzy  
-- Shocks (e.g. pandemics) may disrupt historic relationships
+### 📉 If You Use a Proxy Risk Target  
 
----
+| Metric | Use |
+|--------|-----|
+| **RMSE, MAE** | How close the model’s predicted score is to the proxy |
+| **MAPE** | % error in predicting risk level |
+| **R²** | Explanatory power |
 
-## 📍 10. Final Deliverables Structure
-```bash
-project-root/
-├── README.md ✅
-├── .gitignore
-├── data/
-│   ├── *.csv, *.xls (macroeconomic indicators) ✅
-├── notebooks/
-│   ├── eda.ipynb
-│   ├── labeling.ipynb
-│   ├── feature_engineering.ipynb
-│   ├── modeling.ipynb ✅
-│   ├── evaluation.ipynb ✅
-│   └── final_notebook.ipynb ✅
-├── scripts/
-│   ├── data_pull.py
-│   ├── labeling_logic.py ✅
-│   └── features.py
-├── presentation/
-│   └── Economic_Turn_Classification_Presentation.pdf ✅
-=======
-### 📈 Visualizations  
-- Timeline of true vs predicted regimes  
-- Stacked area chart of class probabilities  
-- Lead time bar chart  
-- SHAP driver timeline (top features over time)  
-- Volatility comparison chart (actual vs predicted switches)
+### ⏳ Time-Sensitive Evaluation  
+
+| Method | Insight |
+|--------|--------|
+| **Lead Time Curve** | Plot how early model detects rising risk before true recession |
+| **Recession Overlay** | Align NBER dates and predicted risk curve |
+| **SHAP by Time** | Show which indicators raise risk over time |
+| **Prediction Volatility** | Smooth transitions preferred over jumpy forecasts |
+
+📌 Bonus: Create a **Lead Time Comparison Table** for past recessions, showing how early your model flagged elevated risk levels.
 
 ---
 
-## 📍 9. Business Use Cases  
-- **Finance**: Adjust asset allocation based on regime risk  
-- **Corporate**: Guide hiring, spending, pricing  
-- **Policy & Government**: Early signals for macro or fiscal planning  
+## 📍 9. Output & Interpretation  
+
+| Quarter | Forecasted Recession Risk |
+|---------|----------------------------|
+| 2023 Q3 | 12.4% |
+| 2023 Q4 | 29.1% |
+| 2024 Q1 | **58.7%** |
+| 2024 Q2 | 61.3% |
+
+Use threshold bands:  
+- 0–25% = Low Risk  
+- 25–50% = Moderate  
+- 50–75% = High Risk  
+- 75–100% = Imminent Danger  
+
+📌 When presenting outputs, overlay prior recession periods and compare historical vs predicted risk scores.
 
 ---
 
-## 📍 10. Deliverables & Structure  
+## 📍 10. Final Deliverables Structure  
 
 ```bash
 project/
-├── README.md ✅
-├── data/                   # All economic indicators
+├── data/
+│   ├── *.csv (all indicators)
 ├── notebooks/
-│   ├── eda.ipynb ✅
-│   ├── feature_engineering.ipynb ✅
-│   ├── labeling.ipynb ✅
-│   ├── modeling.ipynb ✅
-│   ├── evaluation.ipynb ✅
-│   └── final_summary.ipynb ✅
+│   ├── eda.ipynb
+│   ├── proxy_score_engineering.ipynb
+│   ├── feature_engineering.ipynb
+│   ├── regression_modeling.ipynb
+│   ├── unsupervised_detection.ipynb
+│   ├── evaluation.ipynb
+│   └── retro_recession_analysis.ipynb  # ← NEW 📌
 ├── scripts/
-│   ├── data_pipeline.py
-│   ├── labeling_logic.py ✅
-│   ├── sliding_window.py
-│   ├── shap_utils.py
+│   ├── pipeline.py
+│   ├── proxy_builder.py
+│   ├── forecasting_window.py
+│   └── shap_utils.py
 ├── presentation/
-│   └── Final_Pitch_Deck.pdf ✅
-
-## 📍 11. Non-Technical Presentation
-Slides include:
-- Visual of how model sees turning points before they’re obvious  
-- SHAP or bar charts for top regime predictors  
-- Timeline: prediction vs actual regime  
-- Stakeholder action matrix by regime
+│   └── Recession_Risk_Dashboard_Deck.pdf
+```
 
 ---
 
-## 📍 12. Optional Streamlit Dashboard
-### Features:
-- Select time range & lag window  
-- Toggle indicators (Confidence, Jobs, Yield Curve, etc.)  
-- Display:
-  - Predicted regime + probabilities  
-  - SHAP breakdown  
-  - Lead-time plot for Recession probability
+## 📊 Optional Dashboard Features (Streamlit)
+
+- 📈 Line chart: Predicted risk score over time  
+- 🎯 Risk Gauge: Current quarter’s recession risk  
+- 🔍 SHAP Summary: Top risk-driving signals this quarter  
+- ⏱️ Lead time tracker  
+- 🕰️ Retro mode: “What the model would’ve said in 2007, 2020…”
 
 ---
 
-## ✅ Final Outcome:
-- 20+ curated indicators as features  
-- Rule-based regime labeling  
-- Full time-aware ML pipeline  
-- Interpretation-ready for business decisions  
-- Expandable to global, sectoral, or city-level use
+## ✅ Outcome  
+
+- Forecasts **recession risk as a probability-like signal**  
+- Uses **macro patterns** without hard labels  
+- Explains **why** risk is rising (via SHAP)  
+- Incorporates **historical context** for trust and pattern-matching  
+- Ready for dashboards, APIs, and macro alert systems  
 
 ---
-
-Want a sample `labeling_logic.py` to generate regime labels based on your thresholds? Or a SHAP template for visualizing Boom vs Recession drivers?
-=======
-## 📍 11. Presentation Slides  
-- Clear explanation of regime logic  
-- Recession probability chart over time  
-- SHAP summary of top signals (e.g., Yield Curve, Confidence, Unemployment)  
-- Transition vs Stability performance breakdown  
-- Stakeholder action playbook per regime
-
----
-
-## 📍 12. Optional Streamlit Dashboard  
-
-### Features:
-- Upload or toggle indicator views  
-- Display:
-  - Predicted regime & class probabilities  
-  - Recession risk gauge  
-  - SHAP interpretability  
-  - Lead time chart
-
----
-
-## ✅ Final Outcome  
-- Full pipeline to **forecast regime probabilities**  
-- Time-aware training and evaluation  
-- SHAP-enabled interpretability  
-- Production-ready features for dashboard or API deployment  
-- Easily extensible to global, regional, or sector-specific analysis
-
----
-
-Want help generating:
-- `labeling_logic.py`  
-- `sliding_window_forecaster.py`  
-- `evaluation_metrics.py` with time-aware score breakdowns?
-
