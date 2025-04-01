@@ -326,9 +326,7 @@ brier_score_loss(y_true == 'Recession', model.predict_proba(X)[:, 3])
 >>>>>>> 2887537 (Initial commit)
 ```
 
----
 
-<<<<<<< HEAD
 ### 📈 Visuals:
 - Timeline: predicted vs true regimes (with overlay)
 - SHAP attribution per quarter (feature importance evolution)
@@ -410,12 +408,7 @@ project/
 │   ├── shap_utils.py
 ├── presentation/
 │   └── Final_Pitch_Deck.pdf ✅
->>>>>>> 2887537 (Initial commit)
-```
 
----
-
-<<<<<<< HEAD
 ## 📍 11. Non-Technical Presentation
 Slides include:
 - Visual of how model sees turning points before they’re obvious  
@@ -481,4 +474,4 @@ Want help generating:
 - `labeling_logic.py`  
 - `sliding_window_forecaster.py`  
 - `evaluation_metrics.py` with time-aware score breakdowns?
->>>>>>> 2887537 (Initial commit)
+
