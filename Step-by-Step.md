@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 ---
 
@@ -176,10 +177,158 @@ def count_switches(seq):
 ```python
 from sklearn.metrics import brier_score_loss
 brier_score_loss(y_true == 'Recession', model.predict_proba(X)[:, index])
+=======
+Absolutely — here’s your full **step-by-step Capstone Roadmap**, cleanly rewritten and enhanced to reflect your **probability-based time series classification**, including both traditional and **time-aware evaluation metrics**.
+
+---
+
+# ✅ Capstone Roadmap: Economic Regime Forecasting (with Recession Probability)
+*Predict next quarter’s economic state with class probabilities: Boom, Stability, Slowdown, or Recession*
+
+---
+
+## 📍 1. Define the Problem & Scope  
+### 🎯 Goal  
+> Predict the **probability** of each economic regime (Boom, Stability, Slowdown, Recession) for the **next quarter**, using the past 4 quarters of macroeconomic data.
+
+### 🔍 Key Insight  
+Use **lagged macro indicators** (leading, coincident, lagging) to capture early warning signals — completely independent of NBER labels.
+
+---
+
+## 📍 2. Data Collection  
+### 🧾 Datasets & Categories  
+
+| Indicator | Type | Usage |
+|----------|------|-------|
+| Consumer/Business Confidence | Leading | Feature |
+| Yield Curve, Federal Funds Rate | Leading | Feature |
+| Initial Jobless Claims, Jobs Added | Leading | Feature |
+| Housing Starts, Oil Prices | Leading/Contextual | Feature |
+| Capacity Utilization, Industrial Production | Coincident | Feature + Label Logic |
+| CPI, PPI, Unemployment, Labor Force Participation | Lagging | Feature |
+| Real GDP Growth | Lagging | Label source |
+| Deficit as % of GDP | Lagging | Derived Feature |
+
+---
+
+## 📍 3. Data Understanding & EDA  
+- Align all indicators to a **quarterly frequency**  
+- Visualize **historical shocks** (e.g. 1980, 2001, 2008, 2020)  
+- Group features by lead/lag classification  
+- Analyze **lead-lag behavior** visually across turning points  
+- Identify potential breakpoints using rolling momentum or changepoints
+
+**Deliverables:**
+- Indicator trendlines with regime overlays  
+- ACF/PACF analysis for momentum signals  
+- Heatmaps of lead-lag signal strength
+
+---
+
+## 📍 4. Label Engineering (Rule-Based Regimes)  
+
+| Regime | GDP | Unemployment | Capacity Utilization |
+|--------|-----|--------------|------------------------|
+| **Boom** | >3% | Falling | >80% |
+| **Stability** | 1–3% | Stable | ~75–80% |
+| **Slowdown** | 0–1% | Rising | Falling |
+| **Recession** | <0% (2+ quarters) | High | <75% |
+
+📌 No dependency on NBER tags  
+📌 Optionally validate label quality via clustering (KMeans, HMM, GMM)
+
+---
+
+## 📍 5. Feature Engineering  
+- Create **lags**: 1–4 quarters for all indicators  
+- Engineer derived variables:
+  - Yield Spread = 10Y – 2Y  
+  - Fiscal Stress = Deficit % GDP × Interest Rate  
+  - Inflation Gap = PPI – CPI  
+  - Jobs Momentum = ΔJobs / ΔUnemployment  
+- Add rolling statistics: % change, moving average, std  
+- Normalize features using z-score scaling  
+
+---
+
+## 📍 6. Train-Test Split  
+- Use **chronological split** to avoid leakage  
+  - Example: Train = 1970–2010, Test = 2011–2023  
+- Simulate real-time prediction with a **sliding window**:  
+  - e.g., last 4 quarters → predict next  
+- Maintain **time-aware folds** if doing cross-validation  
+
+---
+
+## 📍 7. Modeling  
+### 🎯 Objective: Predict class probabilities
+
+### Models to Train:
+| Model | Description |
+|-------|-------------|
+| Softmax Logistic Regression | Interpretable baseline |
+| XGBoost / LightGBM | Powerful tree-based models with `predict_proba()` |
+| Random Forest | Good for feature ranking and probability calibration |
+| LSTM / Temporal CNN | Optional: sequence-aware deep learning |
+| SHAP / LIME | Global & local model interpretability |
+
+📌 Prioritize **recession recall** and **probability calibration**  
+📌 Compare setups: leading-only vs full features, simple vs sequential models
+
+---
+
+## 📍 8. Model Evaluation  
+
+### 📊 Classification Metrics
+- Accuracy  
+- Precision / Recall / F1 Score per class  
+- ROC AUC (macro and per-class)  
+- Confusion Matrix  
+
+---
+
+### 🕒 Time-Series Evaluation Metrics  
+
+#### ⏱️ Lead Time Detection  
+- **When** does the model detect a regime change vs **when it actually occurs**  
+- Track average **lead time per regime**, especially for Recession  
+
+#### 🔁 Transition vs Stability Accuracy  
+- Segment evaluation into:
+  - **Transition periods**: within ±1 quarter of a regime switch  
+  - **Stable periods**: steady regimes  
+- Compare `F1_transition` vs `F1_stable`
+
+#### 📈 Rolling F1 Score  
+```python
+# 8-quarter rolling F1
+for i in range(8, len(y_true)):
+    f1 = f1_score(y_true[i-8:i], y_pred[i-8:i], average='macro')
+    rolling_f1.append(f1)
+```
+
+#### 🔄 Regime Stability Index  
+- Count **model-predicted regime switches** vs ground truth  
+- Penalize unnecessary over-switching (volatility = noise)
+
+```python
+def count_switches(seq):
+    return sum(seq[i] != seq[i-1] for i in range(1, len(seq)))
+```
+
+#### 🎯 Brier Score (Optional)  
+- For probability calibration of class predictions  
+- Especially valuable for **P(Recession)** and dashboard risk meters
+
+```python
+brier_score_loss(y_true == 'Recession', model.predict_proba(X)[:, 3])
+>>>>>>> 2887537 (Initial commit)
 ```
 
 ---
 
+<<<<<<< HEAD
 ### 📈 Visuals:
 - Timeline: predicted vs true regimes (with overlay)
 - SHAP attribution per quarter (feature importance evolution)
@@ -224,10 +373,49 @@ project-root/
 │   └── features.py
 ├── presentation/
 │   └── Economic_Turn_Classification_Presentation.pdf ✅
+=======
+### 📈 Visualizations  
+- Timeline of true vs predicted regimes  
+- Stacked area chart of class probabilities  
+- Lead time bar chart  
+- SHAP driver timeline (top features over time)  
+- Volatility comparison chart (actual vs predicted switches)
+
+---
+
+## 📍 9. Business Use Cases  
+- **Finance**: Adjust asset allocation based on regime risk  
+- **Corporate**: Guide hiring, spending, pricing  
+- **Policy & Government**: Early signals for macro or fiscal planning  
+
+---
+
+## 📍 10. Deliverables & Structure  
+
+```bash
+project/
+├── README.md ✅
+├── data/                   # All economic indicators
+├── notebooks/
+│   ├── eda.ipynb ✅
+│   ├── feature_engineering.ipynb ✅
+│   ├── labeling.ipynb ✅
+│   ├── modeling.ipynb ✅
+│   ├── evaluation.ipynb ✅
+│   └── final_summary.ipynb ✅
+├── scripts/
+│   ├── data_pipeline.py
+│   ├── labeling_logic.py ✅
+│   ├── sliding_window.py
+│   ├── shap_utils.py
+├── presentation/
+│   └── Final_Pitch_Deck.pdf ✅
+>>>>>>> 2887537 (Initial commit)
 ```
 
 ---
 
+<<<<<<< HEAD
 ## 📍 11. Non-Technical Presentation
 Slides include:
 - Visual of how model sees turning points before they’re obvious  
@@ -258,3 +446,39 @@ Slides include:
 ---
 
 Want a sample `labeling_logic.py` to generate regime labels based on your thresholds? Or a SHAP template for visualizing Boom vs Recession drivers?
+=======
+## 📍 11. Presentation Slides  
+- Clear explanation of regime logic  
+- Recession probability chart over time  
+- SHAP summary of top signals (e.g., Yield Curve, Confidence, Unemployment)  
+- Transition vs Stability performance breakdown  
+- Stakeholder action playbook per regime
+
+---
+
+## 📍 12. Optional Streamlit Dashboard  
+
+### Features:
+- Upload or toggle indicator views  
+- Display:
+  - Predicted regime & class probabilities  
+  - Recession risk gauge  
+  - SHAP interpretability  
+  - Lead time chart
+
+---
+
+## ✅ Final Outcome  
+- Full pipeline to **forecast regime probabilities**  
+- Time-aware training and evaluation  
+- SHAP-enabled interpretability  
+- Production-ready features for dashboard or API deployment  
+- Easily extensible to global, regional, or sector-specific analysis
+
+---
+
+Want help generating:
+- `labeling_logic.py`  
+- `sliding_window_forecaster.py`  
+- `evaluation_metrics.py` with time-aware score breakdowns?
+>>>>>>> 2887537 (Initial commit)

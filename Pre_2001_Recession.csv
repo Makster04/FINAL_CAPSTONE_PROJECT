@@ -1,0 +1,6 @@
+Date,Fed_Funds_Rate_Change,Business_Sentiment_Growth_Rate,Consumer_Sentiment_Growth_Rate,Oil_Price_Change,Yield_Curve_Change,Housing_Starts_Change,Jobless_Claims_Growth_Rate,Job_Growth_Rate,Date,GDP_Growth_Rate,Change_in_CPI,Labor_Force_Change,Change_in_PPI,Unemployment_Rate_Change,Date,Capacity_Utilization_Growth_Rate,Industrial_Production_Growth_Rate
+2000-04-01,0.59,-29.85,-2.5,-5.3,-0.63,-0.61,-1.75,0.67,2000-04-01,1.82,1.6,0.0,2.4,-0.2,2000-04-01,0.21,1.37
+2000-07-01,0.25,-46.81,-0.82,15.66,0.12,-10.02,7.51,0.26,2000-07-01,0.1,1.8,-0.4,3.0,0.2,2000-07-01,-1.06,0.18
+2000-10-01,-0.05,-152.0,-2.31,11.12,0.12,5.88,8.81,0.09,2000-10-01,0.6,1.2,-0.1,1.7,-0.1,2000-10-01,-1.25,-0.21
+2001-01-01,-0.87,561.54,-10.49,-10.58,0.57,3.29,11.94,0.27,2001-01-01,-0.33,1.7,0.4,4.6,0.3,2001-01-01,-2.19,-0.81
+2001-04-01,-1.27,-19.77,-6.65,-7.34,0.51,3.06,7.74,-0.19,2001-04-01,0.62,0.8,-0.3,-3.6,0.2,2001-04-01,-2.16,-1.25

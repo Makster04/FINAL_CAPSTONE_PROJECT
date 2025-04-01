@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Date,Fed_Funds_Rate,Business_Sentiment,Consumer_Sentiment,Oil_Price_WTI,Yield_Curve_10Y_2Y,Housing_Starts,Jobless_Claims,Nonfarm_Payrolls,Date,Real_GDP,CPI_Inflation,Labor_Force_Participation,PPI_Inflation,Unemployment_Rate,Date,Capacity_Utilization,Industrial_Production
 1979-01-01,10.07,17.0,72.1,14.85,-0.76,1630,358000,88808,1979-01-01,7238.727,68.5,63.6,73.8,5.9,1979-01-01,86.065,51.525
 1979-04-01,10.18,12.4,66.0,15.85,-0.6,1748,373385,89417,1979-04-01,7246.454,70.6,63.5,76.9,5.8,1979-04-01,85.1806,51.3251
@@ -8,3 +9,11 @@ Date,Fed_Funds_Rate,Business_Sentiment,Consumer_Sentiment,Oil_Price_WTI,Yield_Cu
 1980-07-01,9.82,-30.0,62.3,39.5,1.22,1269,523769,89840,1980-07-01,7181.743,82.6,63.8,90.3,7.8,1980-07-01,78.1646,48.4907
 1980-10-01,15.85,11.0,75.0,36.0,-0.34,1523,419615,90490,1980-10-01,7315.677,84.7,63.7,92.8,7.5,1980-10-01,80.7126,50.0861
 1981-01-01,16.6,-1.6,71.4,38.0,-0.69,1547,416154,91033,1981-01-01,7459.022,87.2,63.9,95.2,7.5,1981-01-01,80.3913,50.9328
+=======
+Date,Fed_Funds_Rate_Change,Business_Sentiment_Growth_Rate,Consumer_Sentiment_Growth_Rate,Oil_Price_Change,Yield_Curve_Change,Housing_Starts_Change,Jobless_Claims_Growth_Rate,Job_Growth_Rate,Date,GDP_Growth_Rate,Change_in_CPI,Labor_Force_Change,Change_in_PPI,Unemployment_Rate_Change,Date,Capacity_Utilization_Growth_Rate,Industrial_Production_Growth_Rate
+1979-01-01,0.49,-15.84,-9.08,0.0,-0.55,-17.72,5.46,0.97,1979-01-01,0.18,1.4,0.3,2.0,0.1,1979-01-01,-0.34,0.73
+1979-04-01,0.11,-27.06,-8.46,6.73,0.16,7.24,4.3,0.69,1979-04-01,0.11,2.1,-0.1,3.1,-0.1,1979-04-01,-1.03,-0.39
+1979-07-01,0.76,-79.03,-8.48,37.22,0.41,0.69,3.44,0.89,1979-07-01,0.74,2.4,0.1,2.3,-0.1,1979-07-01,-1.05,0.74
+1979-10-01,2.64,-176.92,2.81,33.33,-1.0,-4.49,7.61,0.29,1979-10-01,0.25,2.2,0.1,2.9,0.3,1979-10-01,-0.29,0.03
+1980-01-01,1.49,280.0,7.89,12.07,0.49,-20.23,1.76,0.35,1980-01-01,0.31,2.8,0.3,3.1,0.3,1980-01-01,-0.18,0.44
+>>>>>>> 2887537 (Initial commit)
