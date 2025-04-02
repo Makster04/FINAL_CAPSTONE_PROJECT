@@ -65,7 +65,7 @@ ARMIS uses a **rule-based labeling scheme** to classify historical quarters into
 
 ## 📍 4. Historical Pattern Analysis (Retro Lens) 🔍  
 
-- Build **pre-regime-transition snapshots** (2001, 2008, 2020)  
+- Build **pre-regime-transition snapshots** (1974-75, 1980, 1981-82, 1991, 2001, 2008, 2020)  
 - Identify which indicators **change earliest** before downturns or recoveries  
 - Use pattern recognition to validate labeling and feature design
 

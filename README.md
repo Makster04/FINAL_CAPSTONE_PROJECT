@@ -63,7 +63,8 @@ To convert your **continuous recession risk model** into an **ARMIS-style discre
 | **Labor Market**     | Total Jobs                                     | Coincident |
 |                     | Unemployment Rate                              | Lagging    |
 |                     | Labor Force Participation                      | Coincident |
-| **Inflation**        | Consumer Price Index (CPI)                     | Lagging    |
+| *                   | Jobless Claims                                 | Lagging    |
+| **Inflation**        | Consumer Price Index (CPI)                     | Leading    |
 |                     | Producer Price Index (PPI)                     | Leading    |
 |                     | Crude Oil Prices                                | Leading    |
 | **Interest Rates**   | Fed Funds Rate                                 | Lagging    |
