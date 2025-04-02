@@ -53,7 +53,6 @@ This model predicts a **continuous recession probability-like score** using **la
 - **Fiscal Stress Index** = Deficit % GDP × Interest Rate  
 - **Inflation Gap** = PPI – CPI  
 - **Jobs Momentum** = ΔJobs / ΔUnemployment  
-- **Liquidity Shock** = QoQ ΔM2  
 - **Inventory-to-Sales Ratio**  
 - **Volatility Shock** = ΔVIX  
 - **Yield Curve Inversion** = 10Y – 2Y Spread

@@ -83,10 +83,10 @@ This becomes your **target risk score** (between 0–1 or scaled appropriately).
 |--------|---------|
 | **Fiscal Stress Index** | Deficit % GDP × Interest Rate |
 | **Inflation Gap** | PPI – CPI |
-| **Liquidity Shock** | ΔM2 QoQ |
 | **Jobs Momentum** | ∆Jobs / ∆Unemployment |
 | **Inventory-to-Sales Ratio** | Inventories / Retail Sales |
 | **Volatility Shock** | QoQ % Change in VIX |
+| **Liquidity Shock** | ΔM2 QoQ |
 
 📌 Use retrospective analysis to confirm which of these **consistently shift** before past downturns.
 
@@ -102,7 +102,8 @@ This becomes your **target risk score** (between 0–1 or scaled appropriately).
 | **LSTM / Temporal CNN Regressor** | Capture sequence patterns |
 | **Bayesian Ridge / BSTS** | Include uncertainty bands |
 | **VAR** | For economic system dynamics |
-| **SHAP / LIME** | Add interpretability  
+| **SHAP / LIME** | Add interpretability  |
+
 
 ### 🧰 If Using Unsupervised / Distance-Based  
 | Model | Purpose |
