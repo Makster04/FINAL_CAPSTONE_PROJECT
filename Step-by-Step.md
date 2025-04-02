@@ -28,6 +28,7 @@ Binary recession forecasting is often too coarse. ARMIS produces **discrete, int
 |                     | Labor Force Participation                      | Coincident |
 | **Inflation**        | Consumer Price Index (CPI)                     | Lagging    |
 |                     | Producer Price Index (PPI)                     | Leading    |
+|                     | Crude Oil Prices                                | Leading    |
 | **Interest Rates**   | Fed Funds Rate                                 | Lagging    |
 |                     | Baa-Aaa Treasury Constant Maturity Rate        | Mixed      |
 | **Real Economy**     | Housing Starts                                 | Leading    |
@@ -36,6 +37,7 @@ Binary recession forecasting is often too coarse. ARMIS produces **discrete, int
 | **Production**       | Industrial Production                          | Coincident |
 | **Fiscal & Credit**  | Deficit as % of GDP                            | Lagging    |
 |                     | Baa-Aaa Corporate Bond Yield                   | Lagging    |
+|                     | Credit Conditions Subindex                      | Lagging    |
 | **Liquidity**        | Real M2 Stocks                                 | Lagging    |
 | **Sales/Inventory**  | Business Inventories                           | Lagging    |
 |                     | Retail Sales                                   | Coincident |

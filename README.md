@@ -65,6 +65,7 @@ To convert your **continuous recession risk model** into an **ARMIS-style discre
 |                     | Labor Force Participation                      | Coincident |
 | **Inflation**        | Consumer Price Index (CPI)                     | Lagging    |
 |                     | Producer Price Index (PPI)                     | Leading    |
+|                     | Crude Oil Prices                                | Leading    |
 | **Interest Rates**   | Fed Funds Rate                                 | Lagging    |
 |                     | Baa-Aaa Treasury Constant Maturity Rate        | Mixed      |
 | **Real Economy**     | Housing Starts                                 | Leading    |
@@ -73,6 +74,7 @@ To convert your **continuous recession risk model** into an **ARMIS-style discre
 | **Production**       | Industrial Production                          | Coincident |
 | **Fiscal & Credit**  | Deficit as % of GDP                            | Lagging    |
 |                     | Baa-Aaa Corporate Bond Yield                   | Lagging    |
+|                     | Credit Conditions Subindex                      | Lagging    |
 | **Liquidity**        | Real M2 Stocks                                 | Lagging    |
 | **Sales/Inventory**  | Business Inventories                           | Lagging    |
 |                     | Retail Sales                                   | Coincident |
