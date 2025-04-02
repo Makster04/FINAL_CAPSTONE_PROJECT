@@ -19,18 +19,28 @@ Binary recession forecasting is often too coarse. ARMIS produces **discrete, int
 
 ### 📦 Core Indicator Themes & Timing  
 
-| Theme                  | Indicators                                             | Timing |
-|------------------------|--------------------------------------------------------|--------|
-| **Confidence**         | Consumer & Business Confidence                         | Leading |
-| **Labor Market**       | Jobs Added, Unemployment Rate, Labor Force Participation | Mixed |
-| **Inflation**          | CPI, PPI                                               | Mixed |
-| **Interest Rates**     | Fed Funds Rate, Yield Curve Spread                     | Mixed |
-| **Real Economy**       | Housing Starts, Durable Goods Orders, Capacity Utilization | Mixed |
-| **Production**         | Industrial Production                                  | Coincident |
-| **Fiscal & Credit**    | Deficit % GDP, Corporate Bond Spreads                  | Lagging |
-| **Liquidity**          | Real M2 Stocks                                         | Lagging |
-| **Sales/Inventory**    | Business Inventories, Retail Sales                     | Mixed |
-| **Volatility**         | VIX (Volatility Index)                                 | Leading |
+| Theme               | Indicator                                      | Timing     |
+|---------------------|------------------------------------------------|------------|
+| **Confidence**       | Consumer Confidence                            | Leading    |
+|                     | Business Confidence                            | Leading    |
+| **Labor Market**     | Total Jobs                                     | Coincident |
+|                     | Unemployment Rate                              | Lagging    |
+|                     | Labor Force Participation                      | Coincident |
+| **Inflation**        | Consumer Price Index (CPI)                     | Lagging    |
+|                     | Producer Price Index (PPI)                     | Leading    |
+| **Interest Rates**   | Fed Funds Rate                                 | Lagging    |
+|                     | Baa-Aaa Treasury Constant Maturity Rate        | Mixed      |
+| **Real Economy**     | Housing Starts                                 | Leading    |
+|                     | Durable Goods Orders                           | Leading    |
+|                     | Capacity Utilization                           | Coincident |
+| **Production**       | Industrial Production                          | Coincident |
+| **Fiscal & Credit**  | Deficit as % of GDP                            | Lagging    |
+|                     | Baa-Aaa Corporate Bond Yield                   | Lagging    |
+| **Liquidity**        | Real M2 Stocks                                 | Lagging    |
+| **Sales/Inventory**  | Business Inventories                           | Lagging    |
+|                     | Retail Sales                                   | Coincident |
+| **Volatility**       | VIX (Volatility Index)                         | Leading    |
+
 
 📌 *Timing tags help structure lags and validate regime transitions.*
 

@@ -56,17 +56,28 @@ To convert your **continuous recession risk model** into an **ARMIS-style discre
 
 ### 🔍 Input Features: Lagged Macroeconomic Signals  
 
-| Theme | Indicators |
-|-------|------------|
-| Confidence | Consumer & Business Confidence |
-| Labor | Jobs Added, Unemployment, Participation |
-| Inflation | CPI, PPI |
-| Rates | Fed Funds Rate, Yield Curve Spread |
-| Production | Capacity Utilization, Industrial Output |
-| Fiscal Stress | Deficit × Interest Rate |
-| Liquidity | Real M2 |
-| Volatility | VIX |
-| Inventory & Sales | Business Inventories, Retail Sales |
+| Theme               | Indicator                                      | Timing     |
+|---------------------|------------------------------------------------|------------|
+| **Confidence**       | Consumer Confidence                            | Leading    |
+|                     | Business Confidence                            | Leading    |
+| **Labor Market**     | Total Jobs                                     | Coincident |
+|                     | Unemployment Rate                              | Lagging    |
+|                     | Labor Force Participation                      | Coincident |
+| **Inflation**        | Consumer Price Index (CPI)                     | Lagging    |
+|                     | Producer Price Index (PPI)                     | Leading    |
+| **Interest Rates**   | Fed Funds Rate                                 | Lagging    |
+|                     | Baa-Aaa Treasury Constant Maturity Rate        | Mixed      |
+| **Real Economy**     | Housing Starts                                 | Leading    |
+|                     | Durable Goods Orders                           | Leading    |
+|                     | Capacity Utilization                           | Coincident |
+| **Production**       | Industrial Production                          | Coincident |
+| **Fiscal & Credit**  | Deficit as % of GDP                            | Lagging    |
+|                     | Baa-Aaa Corporate Bond Yield                   | Lagging    |
+| **Liquidity**        | Real M2 Stocks                                 | Lagging    |
+| **Sales/Inventory**  | Business Inventories                           | Lagging    |
+|                     | Retail Sales                                   | Coincident |
+| **Volatility**       | VIX (Volatility Index)                         | Leading    |
+
 
 📌 All features are lagged by 1–4 quarters and engineered with rolling changes, gaps, and volatility.
 

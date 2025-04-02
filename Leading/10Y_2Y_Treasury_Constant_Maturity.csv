@@ -1,4 +1,4 @@
-observation_date,Yield_Curve_10Y_2Y_Inversion
+observation_date,10Y_minus_2Y_Treasury_Constant_Maturity
 1976-06-01,0.80
 1976-07-01,0.98
 1976-08-01,1.14
