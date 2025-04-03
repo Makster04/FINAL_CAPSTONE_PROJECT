@@ -11,7 +11,7 @@ Great — now that you’ve laid out the full ARMIS pipeline, let’s directly a
 
 | Step | Purpose | Indicators Used |
 |------|---------|-----------------|
-| **3. Regime Definition & Labeling** | Create **target variable** (`Regime_Label`) based on **rule-based logic** | ✳️ GDP, Unemployment, Capacity Utilization, Industrial Production, Jobless Claims |
+| **3. Regime Definition & Labeling** | Create **target variable** (`Regime_Label`) based on **rule-based logic** | ✳️ GDP, Unemployment, Capacity Utilization, Industrial Production |
 | **4–6. EDA + Feature Engineering** | Build the **inputs/features** for forecasting future regimes | ✅ **Prior 1–4 quarter lags** of leading/coincident indicators (e.g., Consumer Confidence, Housing Starts, PPI, VIX, M2, Durable Goods, etc.) |
 | **7. Modeling** | Train model to predict **future regime** (1 quarter ahead) based on past data | ✅ Uses the lagged + derived features |
 | **8. Forecasting Logic** | Apply model to predict the **next quarter’s regime** | ✅ Same features as above |
