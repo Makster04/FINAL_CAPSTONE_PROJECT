@@ -180,27 +180,6 @@ ARMIS uses a **rule-based labeling scheme** to classify historical quarters into
 
 ---
 
-## 📍 13. Final Project Structure  
-
-```
-armis_project/
-├── data/
-│   ├── macro_indicators.csv
-├── notebooks/
-│   ├── eda.ipynb
-│   ├── regime_labeling.ipynb
-│   ├── feature_engineering.ipynb
-│   ├── classification_models.ipynb
-│   ├── evaluation.ipynb
-│   └── retro_analysis.ipynb
-├── scripts/
-│   ├── pipeline.py
-│   ├── shap_utils.py
-│   ├── sliding_windows.py
-├── presentation/
-│   └── ARMIS_Slides.pdf
-```
-
 ---
 
 ## 📊 Optional Dashboard Add-ons  
