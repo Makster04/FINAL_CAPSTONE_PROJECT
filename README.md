@@ -1,8 +1,3 @@
-Great move — pivoting to ARMIS makes your capstone more interpretable and classification-focused, which opens up lots of real-world applications.
-
----
-
-To convert your **continuous recession risk model** into an **ARMIS-style discrete regime classifier**, here’s **what needs to change** in the project description:
 
 ---
 

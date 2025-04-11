@@ -162,7 +162,7 @@ ARMIS uses a **rule-based labeling scheme** to classify historical quarters into
 ## 📍 11. SHAP-Based Explainability  
 
 - Use **Global SHAP** to rank top features for each regime  
-- Use **Local SHAP** to explain why Recession was predicted in Q3 2024  
+- Use **Local SHAP** to explain why it ended up STABLE  predicttion in Q3 2024  
 - Visualize feature attribution over time (SHAP timelines)
 
 ---
@@ -179,27 +179,6 @@ ARMIS uses a **rule-based labeling scheme** to classify historical quarters into
 📌 Include **transition-focused visualizations** to highlight early warning success.
 
 ---
-
-## 📍 13. Final Project Structure  
-
-```
-armis_project/
-├── data/
-│   ├── macro_indicators.csv
-├── notebooks/
-│   ├── eda.ipynb
-│   ├── regime_labeling.ipynb
-│   ├── feature_engineering.ipynb
-│   ├── classification_models.ipynb
-│   ├── evaluation.ipynb
-│   └── retro_analysis.ipynb
-├── scripts/
-│   ├── pipeline.py
-│   ├── shap_utils.py
-│   ├── sliding_windows.py
-├── presentation/
-│   └── ARMIS_Slides.pdf
-```
 
 ---
 
