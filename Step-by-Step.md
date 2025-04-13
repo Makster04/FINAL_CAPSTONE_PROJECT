@@ -148,6 +148,7 @@ ARMIS uses a **rule-based labeling scheme** to classify historical quarters into
 ---
 
 ## 📍 10. Output Interpretation  
+- **Regime Class Probabilities**: Use for decision-making or further analysis by using ARIMA 
 
 | Quarter | Predicted Regime | Class Probabilities |
 |---------|------------------|---------------------|

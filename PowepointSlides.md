@@ -1,234 +1,185 @@
-Absolutely. Below is a rewritten version of **Slides 1–5**, tailored to fit your ARMIS Capstone and modeled precisely after your NBA deck structure. This version assumes slide content will be placed on PowerPoint with visuals added later.
-
----
-
-## 📈 **Slide 1: ARMIS**  
+## 📈 Slide 1: ARMIS  
 ### *Automated Regime Modeling via Interpretable Signals*  
 > **Forecasting the Next Economic Regime — One Quarter at a Time**  
 **Author**: Mak Trnka  
-**Date**: April 2025  
+**Date**: April 2025
 
 ---
 
-## 📊 **Slide 2: Overview**
+## 📊 Slide 2: Overview
 
-**OVERVIEW**  
-1. Why this Model Matters  
+**ARMIS Presentation Roadmap**  
 2. Business Problem  
 3. Who Benefits from the Model  
 4. Data Preparation & Preprocessing  
-5. Regime Classification Architecture  
-6. Interpretability Transparency & Metrics  
-7. Sample Output from the Model  
-8. Evaluation & Validation  
-9. Business Recommendations  
-10. Q&A  
+5. Modeling Approaches (Pre-Forecast)  
+6. Forecasting + Deployment Architecture  
+7. SHAP Interpretability  
+8. Sample Output from the Model  
+9. Evaluation & Validation  
+10. Business Recommendations  
+11. Next Steps  
+12. Q&A
 
 ---
 
-## ✅ **Slide 3: Why This Model Matters**
 
-- Traditional macro models output **probability scores** or binary forecasts — hard to explain, harder to act on.  
-- ARMIS produces **discrete, interpretable regime predictions** (*Boom, Stability, Slowdown, Recession*).  
-- Uses only **lagged indicators**, enabling forward planning with no future data leakage.  
-- Offers a better framework for quarterly decision-making.
+## 🧠 Slide 3: Business Problem
 
-**In addition:**  
-- Combines **rule-based regime labeling + SHAP** for transparency  
-- Helps organizations **prepare for regime shifts**, not just react  
-- Human-readable, plug-and-play into dashboards and strategy sessions
+> “What economic regime is the U.S. heading into — and why?”
+
+- Binary recession/no-recession models lack nuance.  
+- Probabilistic outputs (e.g., "72% chance of recession") often confuse more than clarify.  
+- ARMIS classifies the economy into **four actionable regimes**.  
+- It **explains** what variables are driving these shifts.
 
 ---
 
-## 🧠 **Slide 4: Business Problem**
+## 👥 Slide 4: Who Benefits from This Model?
 
-> “What macroeconomic regime is the U.S. economy entering next — and what signals are driving that transition?”
-
-### 🧩 The Challenge:
-- Binary recession detectors miss nuance (Boom vs Mild Slowdown)  
-- Probabilistic outputs (e.g., “72% recession risk”) lack interpretability  
-- Lack of signal attribution limits trust and actionability  
-
-### ✅ The Solution:
-ARMIS reframes the problem:
-- Classifies the **next quarter** into one of four **regimes**
-- Uses only **past 4 quarters** of macro data
-- Explains **why** a regime is forecast using SHAP and historical validation
+| Stakeholder         | Use Case                                  |
+|---------------------|--------------------------------------------|
+| 💼 Executives       | Strategic planning & cost allocation       |
+| 📈 Fund Managers    | Adjusting portfolios based on regime       |
+| 🧠 Economists       | Scenario modeling & explanation            |
+| 📱 Fintech Teams     | Regime-based overlays in user apps         |
+| 🧮 Data Engineers    | Embedding regime logic into pipelines      |
+| 📰 Media/Think Tanks | Data-supported narratives                  |
 
 ---
 
-## 👥 **Slide 5: Who Benefits from This Model?**
+## 🧹 Slide 5: Data Preparation & Preprocessing
 
-### 🎯 Primary Stakeholders
+| Step        | Description                                                              |
+|-------------|--------------------------------------------------------------------------|
+| Sources     | OECD, FRED, IMF, St. Louis Fed                                           |
+| Indicators  | 30+ macro signals: CPI, VIX, Jobs, Durable Goods, Fed Funds, M2, etc.   |
+| Enrichment  | Lags (1-4Q), **rolling mean/std**, % change, engineered signals         |
+| Final Set   | ~250 features per quarter (1970–2025), categorized by indicator timing  |
 
-| Stakeholder | Benefit |
-|-------------|---------|
-| 💼 CFOs & Executives | Use forecasts for hiring, cost management, and strategy |
-| 📈 Portfolio Managers | Rotate assets based on regime exposure |
-| 🧠 Economists & Strategists | Craft outlooks, run scenarios, explain trends |
-
----
-
-### 🌐 Secondary Users
-
-| User | Use Case |
-|------|----------|
-| 🧮 Data Science Teams | Integrate regime classification into internal models or alerts |
-| 📱 Fintech Platforms | Display economic regimes in retail investment apps |
-| 📢 Media & Think Tanks | Communicate the macro landscape with clear narrative context |
-
-> 🗣 “Instead of saying *maybe recession*, we say *Slowdown ahead — here’s what’s driving it*.”
+📌 Features are organized by **leading, lagging, and coincident** categories.  
+📌 Applied rolling statistics (mean, std) over 4-quarter windows to smooth volatility and capture trend dynamics.
 
 ---
 
-Great — here is the rewritten content for **Slides 6 through 13**, continuing the polished, capstone-style format consistent with your NBA trade deck structure.
+## 🧰 Slide 6: Modeling Approaches (Pre-Forecast)
+
+| Model               | Strengths                     |
+|---------------------|-------------------------------|
+| XGBoost/LightGBM    | Accuracy + SHAP compatibility |
+| Random Forest       | Strong baseline               |
+| Logistic Regression | Interpretable benchmark       |
+| LSTM / TCN (optional)| Sequence-aware experimentation|
+
+- Format: **4Q lagged data → predict next quarter’s regime**.  
+- Labels based on rules for GDP, unemployment, capacity utilization.  
+- Metrics include accuracy, F1, **Transition-F1**, and confusion matrix.  
+- Used a **sliding window framework**:  
+  - Train model using lagged inputs from quarters *t-4 to t-1*  
+  - Predict regime for quarter *t*  
+  - Slide window forward one step for next training instance
+
+```plaintext
+[Q1, Q2, Q3, Q4] → Predict Q5
+[Q2, Q3, Q4, Q5] → Predict Q6
+```
 
 ---
 
-## 🧹 **Slide 6: Data Preparation & Preprocessing**
+## 🔮 Slide 7: Forecasting + Deployment Architecture
 
-### 📊 Macroeconomic Data Sources (1970–2025)
+> Forecasting macro indicators enables **real-time regime prediction**
 
-| Theme           | Examples                                    |
-|------------------|---------------------------------------------|
-| Confidence       | Consumer & Business Confidence (OECD)       |
-| Labor Market     | Unemployment Rate, Jobs Added, Participation |
-| Inflation        | CPI, PPI, Oil Prices                        |
-| Real Economy     | Durable Goods Orders, Capacity Utilization  |
-| Liquidity        | Real M2 Money Stocks                        |
-| Interest Rates   | Fed Funds, Yield Spreads (10Y–2Y)           |
-| Fiscal & Credit  | Deficit % GDP, Credit Conditions            |
-| Volatility       | VIX, Bond Yields                            |
+```plaintext
+[Historical Macros]
+      ↓
+   [ARIMA Forecast]
+      ↓
+[Enriched Indicators]
+      ↓
+[Trained Classifier]
+      ↓
+[SHAP Explanations]
+```
 
----
-
-### 🔧 Preprocessing Steps:
-- Merged **leading, coincident, and lagging** indicators by quarter  
-- Engineered new signals:
-  - `Jobs_Momentum = ΔJobs / ΔUnemployment`
-  - `Fiscal_Stress = Deficit × Fed Funds Rate`
-  - `Inflation Gap = PPI – CPI`
-- Applied:
-  - **Z-score normalization**
-  - **1–4 quarter lags**
-  - **Rolling mean, std, and % change**
-- Final dataset: 250+ temporal features per quarter
+- ARIMA projects next-quarter macro inputs.  
+- Classifier assigns a regime based on those inputs.  
+- SHAP interprets the model’s decision.
 
 ---
 
-## 🧠 **Slide 7: Regime Classification Architecture**
+## 🔍 Slide 8: SHAP Interpretability
 
-### 🧩 Modeling Goal:
-> Predict the **next quarter’s economic regime** using **only past data**  
-(*Realistic for policy, investment, and business planning*)
+| Type         | What It Explains                            |
+|--------------|----------------------------------------------|
+| Global SHAP  | Key features for each regime type            |
+| Local SHAP   | Feature importance for one prediction (e.g., Q4 2025) |
 
----
+📌 SHAP values are calculated post-classification using predicted or actual inputs.
 
-### ⚙️ Model Pipeline:
-
-| Component         | Description |
-|------------------|-------------|
-| **Input**         | Lagged macro indicators (1–4Q lags, rolling stats) |
-| **Output**        | Regime class: Boom, Stability, Slowdown, Recession |
-| **Split**         | Chronological (Train: 1970–2010, Test: 2011–2024) |
-| **Models Tested** | Logistic Regression, XGBoost, Random Forest |
-| **Labels**        | Based on GDP, Jobs, Industrial Production, etc. (rule-based) |
+**Suggested Visuals:**  
+- Global SHAP bar chart  
+- Local SHAP force plot
 
 ---
 
-✅ SMOTE used for class balance  
-✅ LabelEncoder for interpretable SHAP plots
+## 📤 Slide 9: Sample Output from the Model
+
+| Quarter   | Regime       | Top Drivers (Local SHAP)       |
+|-----------|--------------|---------------------------------|
+| 2025 Q2   | Stability     | GDP Growth, Credit Conditions  |
+| 2025 Q3   | Slowdown      | Jobless Claims, Oil Prices     |
+| 2025 Q4   | Recession     | Durable Goods ↓, M2 ↓          |
+| 2026 Q1   | Recession     | CPI ↑, Jobless Claims ↑        |
+
+✅ Forecasts use **ARIMA-projected inputs**  
+✅ Explanations use **Local SHAP analysis**
 
 ---
 
-## 🔍 **Slide 8: Interpretability Transparency & Metrics**
+## 🧪 Slide 10: Evaluation & Validation
 
-### 📊 Interpretable by Design
+| Metric             | Insight                                |
+|--------------------|----------------------------------------|
+| Accuracy / F1      | Regime classification performance      |
+| Confusion Matrix   | Type-specific errors                   |
+| Transition Matrix  | Predicting regime shifts               |
+| SHAP Timeline      | Drivers behind transitions             |
+| Lead Time Curve    | Early detection of upcoming changes    |
 
-| Method | Purpose |
-|--------|---------|
-| **Rule-Based Labels** | Transparent regime definition (not a black box) |
-| **SHAP (Global)** | Ranks most important signals for each regime |
-| **SHAP (Local)** | Explains why a regime was predicted for a specific quarter |
-| **Transition Comparison** | Aligns with NBER recessions (2001, 2008, 2020) |
-
----
-
-### 💡 Example (Recession Forecast – Q4 2024):
-| Feature                | Impact |
-|------------------------|--------|
-| Jobless Claims ↑       | +0.29  |
-| Durable Goods ↓        | +0.22  |
-| Credit Conditions ↓    | +0.19  |
-
-> 🔦 *“Recession signal driven by worsening credit, weak durable demand, and layoffs”*
+✅ Successfully aligns with past recessions: 2001, 2008, 2020
 
 ---
 
-## 📤 **Slide 9: Sample Output from the Model**
+## 💼 Slide 11: Business Recommendations
 
-### 📆 Forecasted Regimes (Real Output)
+1. Embed ARMIS into executive dashboards.  
+2. Use predicted regimes to trigger **scenario planning**.  
+3. Establish alerts for rising recession probabilities.  
+4. Present SHAP-based drivers in internal strategy decks.  
+5. Run "what-if" simulations with hypothetical macro shocks.
 
-| Quarter   | Predicted Regime | Confidence |
-|-----------|------------------|------------|
-| 2025 Q2   | Stability         | 75%        |
-| 2025 Q3   | Slowdown          | 68%        |
-| 2025 Q4   | Recession         | 72%        |
-| 2026 Q1   | Recession         | 65%        |
-
----
-
-- Each prediction includes **class probability** and **SHAP-based driver explanation**  
-- *Can be embedded in a dashboard or alert system (e.g., “Recession likely, 72% confidence”)*
+> Forecasts the **next economic state** — and explains **why**.
 
 ---
 
-## 🧪 **Slide 10: Evaluation & Validation**
+## 🚀 Slide 12: Next Steps
 
-### 🧾 Metrics Used
+| Stage     | Action                                                |
+|-----------|--------------------------------------------------------|
+| Now       | Use ARIMA for real-time macro forecasting             |
+| Next      | Evaluate Seq2Seq, Prophet, Transformer alternatives   |
+| Later     | Extend ARMIS to domains: labor, housing, sectors      |
+| Ongoing   | Develop dashboard/API for live regime updates         |
 
-| Metric               | Notes |
-|----------------------|-------|
-| Accuracy, Precision, Recall | Per class — especially for *Recession* |
-| F1 Score             | Weighted and macro-averaged |
-| Confusion Matrix     | Showed strong separation between Stability and Recession |
-| Transition Matrix    | Regime shift timing vs actual events |
-
----
-
-### 📉 Retrospective Validation  
-- Tested against **NBER-defined recessions**:  
-  - 2001 (Dot-com Bust)  
-  - 2008 (GFC)  
-  - 2020 (COVID)  
-- ARMIS regime calls **aligned with known shifts**  
-- Lead-time evaluation confirms **early detection of downturns**
+> Expand to **multi-step horizons** and broader economic modeling.
 
 ---
 
-## 💼 **Slide 11: Business Recommendations**
+## ❓ Slide 13: Q&A
 
-1. 📊 Integrate ARMIS into **internal economic dashboards**  
-2. 🔔 Set regime-based triggers (e.g., alert if *Slowdown → Recession*)  
-3. 📡 Deploy via API for external data platforms or economic tools  
-4. 🧠 Use SHAP outputs to explain strategic decisions to stakeholders  
-5. 📈 Run “what-if” analyses by tweaking key indicators (e.g., oil shock, job cuts)
+> “The future isn’t binary — it’s a regime.
+ARMIS helps forecast it, explain it, and prepare for it.”
 
-> ARMIS makes regime forecasting **actionable and explainable.**
+📍 [Suggested final image: compass, radar, or economic dashboard metaphor]
 
----
-
-## 🔮 **Slide 12: Next Steps**
-
-1. 🧠 **Forecast inputs** using ARIMA or Seq2Seq → predict regimes further out (Q+2, Q+3)  
-2. 📊 Build a **dashboard or alerting tool** for end users  
-3. 🧬 Extend to **sector-level regime classification** (e.g., housing, retail, labor)  
-4. 🧪 Run **scenario tests**:  
-   > “If unemployment rises 1% and CPI spikes, what regime do we enter?”
-
----
-
-## ❓ **Slide 13: Any Questions Because...**  
-> The future isn’t binary — it’s a regime. And **ARMIS helps you forecast it.**
-
----
