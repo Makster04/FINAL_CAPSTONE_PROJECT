@@ -1,205 +1,149 @@
 
-# ✅ Capstone Roadmap: ARMIS  
-**Automated Regime Modeling via Interpretable Signals**  
-*Forecasting the next quarter’s macroeconomic regime using time-lagged indicators*
+# 📊 Project Roadmap: Macroeconomic Regime Forecasting via Hybrid Time Series Modeling
+
+## 🔍 Project Overview
+**Objective**: Build a hybrid time series pipeline that forecasts key macroeconomic indicators and predicts the upcoming economic regime (Boom, Stability, Slowdown, Recession) using the datasets: lags.csv, Regime_Lables.csv, and Prediction_Indicators.csv.
 
 ---
 
-## 📍 1. Problem Statement & Objective  
+## ✅ Step 1: Data Collection & Preparation
+**Datasets Used**: lags.csv, Prediction_Indicators.csv, Regime_Lables.csv
 
-### 🎯 Goal  
-Predict the **upcoming quarter’s economic regime** — one of {**Boom, Stability, Slowdown, Recession**} — based on the prior 4 quarters of macroeconomic signals.
+**Goals**:
+- Load macroeconomic data and regime labels
+- Merge datasets on observation_date
+- Drop duplicate and fully empty columns
+- Fill missing values with column-wise mean
 
-### 🔑 Motivation  
-Binary recession forecasting is often too coarse. ARMIS produces **discrete, interpretable regime labels** that reflect the nuanced stages of the economic cycle, offering stakeholders a clearer decision framework.
-
----
-
-## 📍 2. Data Collection  
-
-### 📦 Core Indicator Themes & Timing  
-
-| Theme               | Indicator                                      | Timing     |
-|---------------------|------------------------------------------------|------------|
-| **Confidence**       | Consumer Confidence                            | Leading    |
-|                     | Business Confidence                            | Leading    |
-| **Labor Market**     | Total Jobs                                     | Coincident |
-|                     | Unemployment Rate                              | Lagging    |
-|                     | Labor Force Participation                      | Coincident |
-| **Inflation**        | Consumer Price Index (CPI)                     | Lagging    |
-|                     | Producer Price Index (PPI)                     | Leading    |
-|                     | Crude Oil Prices                                | Leading    |
-| **Interest Rates**   | Fed Funds Rate                                 | Lagging    |
-|                     | Baa-Aaa Treasury Constant Maturity Rate        | Mixed      |
-| **Real Economy**     | Housing Starts                                 | Leading    |
-|                     | Durable Goods Orders                           | Leading    |
-|                     | Capacity Utilization                           | Coincident |
-| **Production**       | Industrial Production                          | Coincident |
-| **Fiscal & Credit**  | Deficit as % of GDP                            | Lagging    |
-|                     | Baa-Aaa Corporate Bond Yield                   | Lagging    |
-|                     | Credit Conditions Subindex                      | Lagging    |
-| **Liquidity**        | Real M2 Stocks                                 | Lagging    |
-| **Sales/Inventory**  | Business Inventories                           | Lagging    |
-|                     | Retail Sales                                   | Coincident |
-| **Volatility**       | VIX (Volatility Index)                         | Leading    |
-
-
-📌 *Timing tags help structure lags and validate regime transitions.*
+**Visuals**:
+- Data availability timeline
+- Heatmap of missingness before/after filling
 
 ---
 
-## 📍 3. Regime Definition & Labeling  
+## 🏗️ Step 2: Feature Engineering
+**Datasets Used**: lags.csv, Prediction_Indicators.csv
 
-ARMIS uses a **rule-based labeling scheme** to classify historical quarters into one of four regimes:
+**Goals**:
+- Create lagged features (1 to 4 quarters)
+- Add 4-quarter rolling mean, std, and percent change
+- Engineer derived features:
+  - Fiscal Stress = (Deficit % GDP) × (Interest Rate)
+  - Inflation Gap = PPI - CPI
+  - Jobs Momentum = Jobs / Unemployment Change
+  - Inventory Ratio = Inventories / Retail Sales
+  - Macro Stress Flags = binary indicators
 
-| Regime     | Characteristics |
-|------------|-----------------|
-| **Boom**     | High GDP (>3%), low/falling unemployment, strong production |
-| **Stability**| Steady GDP (1–3%), stable labor & inflation |
-| **Slowdown** | Sub-1% GDP, weakening labor, soft demand |
-| **Recession**| Negative GDP (2+ quarters), high/falling capacity, job losses |
-
-📌 Labels are assigned using thresholds on GDP, unemployment, and capacity utilization — not just NBER retrospectives.
-
----
-
-## 📍 4. Historical Pattern Analysis (Retro Lens) 🔍  
-
-- Build **pre-regime-transition snapshots** (1974-75, 1980, 1981-82, 1991, 2001, 2008, 2020)  
-- Identify which indicators **change earliest** before downturns or recoveries  
-- Use pattern recognition to validate labeling and feature design
-
-✅ Ensures model is grounded in historical economic transitions.
+**Visuals**:
+- Correlation heatmap (original vs derived)
+- Rolling stats around regime switches
 
 ---
 
-## 📍 5. Data Preparation & EDA  
+## 🧠 Step 3: Regime Labeling
+**Dataset Used**: Prediction_Indicators.csv
 
-- Convert all indicators to **quarterly format**  
-- Apply **z-score normalization**  
-- Analyze regime-specific trends over time  
-- Run **PCA or TSNE** to explore regime separability  
-- Visualize regime boundaries via scatter plots or clusters
+**Goals**:
+- Use rule-based function to classify quarters
+- Labels: Boom, Stability, Slowdown, Recession
+- Based on thresholds of GDP, Unemployment, Jobs, Capacity, Production
 
----
-
-## 📍 6. Feature Engineering  
-
-### 🔁 Temporal Features  
-- Create 1–4 quarter lags per indicator  
-- Add rolling stats (mean, % change, std dev)
-
-### ⚙️ Derived Metrics  
-
-| Feature | Formula |
-|--------|---------|
-| **Fiscal Stress Index** | Deficit % GDP × Interest Rate |
-| **Inflation Gap** | PPI – CPI |
-| **Jobs Momentum** | ΔJobs / ΔUnemployment |
-| **Inventory Ratio** | Inventories ÷ Retail Sales |
-| **Volatility Shock** | QoQ % Change in VIX |
-| **Liquidity Shock** | ΔReal M2 QoQ |
-
-📌 Each feature’s behavior is validated across regime transitions.
+**Visuals**:
+- Bar plot of regime distribution
+- GDP vs Unemployment colored by regime
 
 ---
 
-## 📍 7. Modeling Approaches  
+## 🔍 Step 4: Historical Pattern Analysis
+**Datasets Used**: Prediction_Indicators.csv, regime-labeled output
 
-### 🧰 Classification Models  
+**Goals**:
+- Analyze patterns near regime transitions
+- Focus on downturns: 1974–75, 1980, 2008, 2020
 
-| Model | Strength |
-|-------|----------|
-| **XGBoostClassifier / LightGBM** | Accuracy + SHAP explainability |
-| **Random Forest** | Robust baseline |
-| **Logistic Regression (Softmax)** | Interpretable benchmark |
-| **LSTM / TCN (Optional)** | Sequence-aware (for experimentation) |
-
-📌 Focus on models with **`predict_proba`** and **SHAP support**.
+**Visuals**:
+- Time series overlay for GDP, Unemployment, Production
+- Highlighted zones by regime
 
 ---
 
-## 📍 8. Forecasting Logic  
+## 📈 Step 5: Forecasting Indicators (Step 8.1)
+**Datasets Used**: lags.csv, derived features from Step 2
 
-- Input = 4-quarter lagged macro indicators  
-- Output = 1 of 4 regime classes for the next quarter  
-- Use **sliding windows** for training (time-aware structure)  
-- Predict one quarter ahead, optionally evaluate 2Q/3Q ahead
+**Goals**:
+- Identify which macro indicators require forecasting
+- Choose model by indicator type:
+  - **VAR**: Use for jointly forecasting GDP + Unemployment due to co-dependence
+  - **Prophet**: Use for seasonal, trend-sensitive indicators like Jobs, Retail Sales
+  - **XGBoostRegressor**: Use for all others with nonlinear trends
+- Run sliding window forecast for next 4 quarters
+- Save predictions as future_forecasts_df
 
----
-
-## 📍 9. Train-Test Strategy & Validation  
-
-### ⏱️ Chronological Split  
-- Example: Train on 1970–2010, Test on 2011–2024  
-- Avoids data leakage and respects time sequence
-
-### 📐 Evaluation Metrics  
-
-| Metric | Use |
-|--------|-----|
-| **Accuracy** | Overall match rate |
-| **F1 (per class)** | Balanced regime detection |
-| **Precision/Recall** | Especially for Recession class |
-| **Confusion Matrix** | Understand misclassification behavior |
-
-📌 Use **Transition-F1** to evaluate detection of regime changes.
+**Visuals**:
+- Line plot: Actual vs Forecasted indicator values
+- Prophet output: Trend, seasonality, holidays
+- Residual/error bands for top indicators forecasted
 
 ---
 
-## 📍 10. Output Interpretation  
-- **Regime Class Probabilities**: Use for decision-making or further analysis by using ARIMA 
+## 🧩 Step 6: Regime Classification on Forecasted Indicators (Step 8.2)
+**Input**: future_forecasts_df
 
-| Quarter | Predicted Regime | Class Probabilities |
-|---------|------------------|---------------------|
-| Q1 2024 | Stability         | [Boom: 5%, Stability: 64%, Slowdown: 24%, Recession: 7%] |
-| Q2 2024 | Slowdown          | [Boom: 2%, Stability: 35%, Slowdown: 45%, Recession: 18%] |
-| Q3 2024 | Recession         | [Boom: 0%, Stability: 10%, Slowdown: 28%, **Recession: 62%**] |
+**Goals**:
+- Use trained regime classifier to predict regimes from forecasted indicators
+- Output regime class and probabilities per quarter
+- Save to regime_predictions.csv
 
-📌 Smooth class probability distributions help justify model confidence.
-
----
-
-## 📍 11. SHAP-Based Explainability  
-
-- Use **Global SHAP** to rank top features for each regime  
-- Use **Local SHAP** to explain why it ended up STABLE  predicttion in Q3 2024  
-- Visualize feature attribution over time (SHAP timelines)
+**Visuals**:
+- Stacked bar chart of predicted probabilities
+- Forecasted regime timeline (2024–2026)
 
 ---
 
-## 📍 12. Evaluation Strategy  
+## 🤖 Step 7: Retrospective Regime Classifier
+**Datasets Used**: lags.csv, Regime_Lables.csv
 
-| Method | Insight |
-|--------|--------|
-| Lead Time Curve | How early regime transitions are predicted |
-| SHAP Timeline | Show which features drove changes across time |
-| Transition Matrix | Accuracy around switches (e.g. Slowdown → Recession) |
-| Confusion Matrix | Identify which regimes get misclassified |
+**Goals**:
+- Train classifier on historical lagged indicators
+- Use SMOTE for class balancing
+- XGBoostClassifier with sliding window validation
 
-📌 Include **transition-focused visualizations** to highlight early warning success.
-
----
-
----
-
-## 📊 Optional Dashboard Add-ons  
-
-- Regime Forecast Gauge  
-- Regime Probability Chart  
-- SHAP Feature Attribution View  
-- “What if?” mode (e.g. simulate shock to jobs or rates)
+**Visuals**:
+- Confusion matrix
+- Classification report table
+- SHAP feature importance
 
 ---
 
-## ✅ Final Deliverables  
+## 📅 Step 8: Forecasting Logic
+**Input**: Forecasted macro indicators from Step 5
 
-- 🔍 Time-aware economic regime classification system  
-- 📈 Validated on decades of macro data  
-- 🧠 Interpretable and explainable via SHAP  
-- 📊 Dashboard- and API-ready for real-time integration  
-- 🧩 Expandable to global or sectoral forecasts
+**Goals**:
+- Forecast future quarters iteratively:
+  - Step 1: Predict indicators (VAR, Prophet, XGB)
+  - Step 2: Feed indicators into classifier
+  - Step 3: Predict regime + class probabilities
+- Save to master_forecast_table
+
+**Visuals**:
+- Regime probability timeline
+- Lead Time curve
+- Drift chart of top features
 
 ---
 
-Let me know if you'd like this turned into a PDF, slide deck, or project notebook structure — happy to generate the next format for you!
+## 📌 Deliverables
+- forecast_pipeline.py: End-to-end pipeline
+- forecasted_indicators.csv: All forecasted macro values
+- regime_predictions.csv: Regime classification results
+- evaluation_metrics.txt: Accuracy & metrics
+- SHAP plots and visual explainer assets
+
+---
+
+## 📊 Visualizations Summary
+- Regime timeline chart (past + forecasted)
+- Macro indicator forecast lines
+- SHAP bar + waterfall plots
+- Prophet decompositions
+- Confusion matrix & classification summary
