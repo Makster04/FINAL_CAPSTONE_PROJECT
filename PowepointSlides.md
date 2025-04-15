@@ -1,185 +1,238 @@
-## 📈 Slide 1: ARMIS  
-### *Automated Regime Modeling via Interpretable Signals*  
-> **Forecasting the Next Economic Regime — One Quarter at a Time**  
+
+---
+
+## 📈 Slide 1: Project Title  
+### *Macroeconomic Regime Forecasting via Hybrid Time Series Modeling*  
+> **Predicting Future Economic States — One Quarter at a Time**  
 **Author**: Mak Trnka  
-**Date**: April 2025
+**Date**: April 2025  
 
 ---
 
-## 📊 Slide 2: Overview
+## 🗺️ Slide 2: Presentation Roadmap  
 
-**ARMIS Presentation Roadmap**  
-2. Business Problem  
-3. Who Benefits from the Model  
-4. Data Preparation & Preprocessing  
-5. Modeling Approaches (Pre-Forecast)  
-6. Forecasting + Deployment Architecture  
-7. SHAP Interpretability  
-8. Sample Output from the Model  
-9. Evaluation & Validation  
-10. Business Recommendations  
-11. Next Steps  
-12. Q&A
-
----
-
-
-## 🧠 Slide 3: Business Problem
-
-> “What economic regime is the U.S. heading into — and why?”
-
-- Binary recession/no-recession models lack nuance.  
-- Probabilistic outputs (e.g., "72% chance of recession") often confuse more than clarify.  
-- ARMIS classifies the economy into **four actionable regimes**.  
-- It **explains** what variables are driving these shifts.
+1. Business Problem  
+2. Who Benefits from This Model  
+3. Data Collection & Preparation  
+4. Feature Engineering  
+5. Regime Labeling  
+6. Historical Pattern Analysis  
+7. Forecasting Key Indicators  
+8. Forecast-Based Regime Classification  
+9. Retrospective Classifier Training  
+10. Forecasting Logic Pipeline  
+11. Evaluation Strategy  
+12. Business Recommendations  
+13. Next Steps  
+14. Q&A  
 
 ---
 
-## 👥 Slide 4: Who Benefits from This Model?
-
-| Stakeholder         | Use Case                                  |
-|---------------------|--------------------------------------------|
-| 💼 Executives       | Strategic planning & cost allocation       |
-| 📈 Fund Managers    | Adjusting portfolios based on regime       |
-| 🧠 Economists       | Scenario modeling & explanation            |
-| 📱 Fintech Teams     | Regime-based overlays in user apps         |
-| 🧮 Data Engineers    | Embedding regime logic into pipelines      |
-| 📰 Media/Think Tanks | Data-supported narratives                  |
+## 🧠 Slide 3: Business Problem  
 
 ---
 
-## 🧹 Slide 5: Data Preparation & Preprocessing
+### 💼 Our Challenge as CFOs & Hedge Fund Managers  
+We need a **timely, actionable view of where the economy is heading** — to guide budgeting, hiring, capital allocation, and portfolio positioning.  
+But traditional macro analysis is either **delayed**, **vague**, or **binary** — leaving leadership teams and investment desks uncertain and reactive.
 
-| Step        | Description                                                              |
-|-------------|--------------------------------------------------------------------------|
-| Sources     | OECD, FRED, IMF, St. Louis Fed                                           |
-| Indicators  | 30+ macro signals: CPI, VIX, Jobs, Durable Goods, Fed Funds, M2, etc.   |
-| Enrichment  | Lags (1-4Q), **rolling mean/std**, % change, engineered signals         |
-| Final Set   | ~250 features per quarter (1970–2025), categorized by indicator timing  |
-
-📌 Features are organized by **leading, lagging, and coincident** categories.  
-📌 Applied rolling statistics (mean, std) over 4-quarter windows to smooth volatility and capture trend dynamics.
+- Outlooks like “risk of recession increasing” offer **no concrete playbook**  
+- Binary models miss the **spectrum of economic environments**  
+- Without knowing the next regime, it’s easy to overextend or underreact
 
 ---
 
-## 🧰 Slide 6: Modeling Approaches (Pre-Forecast)
+### 🔍 Why This Is a Problem  
 
-| Model               | Strengths                     |
-|---------------------|-------------------------------|
-| XGBoost/LightGBM    | Accuracy + SHAP compatibility |
-| Random Forest       | Strong baseline               |
-| Logistic Regression | Interpretable benchmark       |
-| LSTM / TCN (optional)| Sequence-aware experimentation|
+> No clear regime = No clear playbook.
 
-- Format: **4Q lagged data → predict next quarter’s regime**.  
-- Labels based on rules for GDP, unemployment, capacity utilization.  
-- Metrics include accuracy, F1, **Transition-F1**, and confusion matrix.  
-- Used a **sliding window framework**:  
-  - Train model using lagged inputs from quarters *t-4 to t-1*  
-  - Predict regime for quarter *t*  
-  - Slide window forward one step for next training instance
+- CFOs risk setting budgets that don’t align with reality  
+- Fund managers may **misallocate capital** at key turning points  
+- Firms miss strategic opportunities or overcommit in fragile quarters  
+- Timing errors compound when leading indicators are misread  
+
+---
+
+### ✅ The Strategic Opportunity  
+
+> What if we could **confidently classify** the next macro regime — and understand the **signals driving it**?
+
+- **Boom** → deploy capital, scale teams  
+- **Stability** → stay the course  
+- **Slowdown** → rebalance exposures, hold back investments  
+- **Recession** → de-risk, preserve cash, hedge downside  
+
+That’s the promise of our pipeline:  
+📊 A hybrid system that forecasts macro indicators, predicts the next regime, and shows **why** it’s changing — all in time to act.
+
+
+---
+
+## 👥 Slide 4: Who Benefits from This Model  
+
+| Stakeholder          | Use Case                                      |
+|----------------------|-----------------------------------------------|
+| 💼 Executives         | Budgeting, planning, risk contingency         |
+| 📈 Hedge Fund Managers| Asset rotation, downside hedging             |
+| 🧠 Economists         | Scenario-based forecasts, economic storytelling |
+| 📱 Fintech Teams      | User-level regime tagging & alerts           |
+| 🧮 Data Engineers      | Embedding regime signals in analytics stack  |
+| 📰 Media & Think Tanks | Regime-based narratives and policy analysis  |
+
+---
+
+## 🧹 Slide 5: Data Collection & Preparation  
+
+| Step         | Details                                                      |
+|--------------|--------------------------------------------------------------|
+| Datasets     | `lags.csv`, `Prediction_Indicators.csv`, `Regime_Labels.csv` |
+| Alignment    | Merged on `observation_date`, cleaned missing/nulls          |
+| Final Set    | 30+ indicators (labor, housing, finance, etc.), 1970–2025     |
+
+📌 Used mean imputation, dropped all-null columns, and retained quarterly structure
+
+---
+
+## 🛠️ Slide 6: Feature Engineering  
+
+- 🔁 Lags for all variables (1Q to 4Q)  
+- 📊 4-quarter **rolling mean**, **standard deviation**, **percent change**  
+- 🧮 Derived Features:  
+  - Fiscal Stress = Deficit × Interest Rate  
+  - Inflation Gap = PPI – CPI  
+  - Jobs Momentum = Employment / ΔUnemployment  
+  - Inventory Ratio = Inventories / Retail Sales  
+- ⚠️ Binary macro-stress flags from economic thresholds  
+
+📌 Visuals: Correlation matrix (raw vs engineered), regime overlay on smoothed trends
+
+---
+
+## 🧠 Slide 7: Regime Labeling Logic  
+
+> Rule-based classification of each quarter using key macro indicators
+
+| Regime      | Criteria Highlights                             |
+|-------------|--------------------------------------------------|
+| Boom        | Strong GDP + Jobs, low Unemployment              |
+| Stability   | Neutral/slightly growing trends                  |
+| Slowdown    | Rising Unemployment, falling production          |
+| Recession   | GDP decline, consumption + labor weakness        |
+
+📌 Applied thresholds to GDP, Unemployment, Capacity Utilization, and more
+
+---
+
+## 🕰️ Slide 8: Historical Pattern Analysis  
+
+- Focused regime analysis on key downturns: **1974–75, 1980, 2008, 2020**  
+- Explored how indicators behaved *before, during, and after* regime shifts  
+- Identified early-warning signal combinations  
+
+📌 Visuals: Timeline plots of GDP, Unemployment, CPI with regime overlays
+
+---
+
+## 🔮 Slide 9: Forecasting Macroeconomic Indicators  
+
+| Forecasting Tool | Use Case Example                              |
+|------------------|------------------------------------------------|
+| **VAR**          | Co-moving indicators (e.g. GDP + Unemployment) |
+| **Prophet**      | Seasonal trends: Jobs, Retail Sales            |
+| **XGBoostRegressor** | Nonlinear indicators: Credit, Inventory Ratios |
+
+- Sliding window approach for each variable  
+- Forecasts 4 quarters ahead → saved as `future_forecasts_df`  
+
+📌 Visuals: Actual vs Forecast lines, Prophet decomposition components
+
+---
+
+## 🧩 Slide 10: Regime Classification on Forecasted Inputs  
+
+> Predict the economic regime based on **forecasted indicators**
+
+| Step                 | Detail                              |
+|----------------------|-------------------------------------|
+| Classifier Input     | Forecasted macro features           |
+| Output               | Regime label + probability per class|
+| Result File          | `regime_predictions.csv`            |
+
+📌 Visuals: Forecasted regime timeline (2024–2026), class probability bar charts
+
+---
+
+## 🤖 Slide 11: Retrospective Classifier Training  
+
+- Trained **XGBoostClassifier** on lagged macro indicators  
+- Used **SMOTE** for class balancing (Recession & Slowdown underrepresented)  
+- Evaluated using a **sliding window** approach
+
+📌 Visuals:  
+- Confusion matrix  
+- SHAP bar plots (global)  
+- Classification report summary  
+
+---
+
+## 🔁 Slide 12: Forecasting Logic Pipeline  
+
+> Full pipeline for regime forecasting and interpretation
 
 ```plaintext
-[Q1, Q2, Q3, Q4] → Predict Q5
-[Q2, Q3, Q4, Q5] → Predict Q6
+1. Forecast indicators (VAR / Prophet / XGBoost)
+        ↓
+2. Predict regime using classifier
+        ↓
+3. Explain regime via SHAP values
 ```
 
----
-
-## 🔮 Slide 7: Forecasting + Deployment Architecture
-
-> Forecasting macro indicators enables **real-time regime prediction**
-
-```plaintext
-[Historical Macros]
-      ↓
-   [ARIMA Forecast]
-      ↓
-[Enriched Indicators]
-      ↓
-[Trained Classifier]
-      ↓
-[SHAP Explanations]
-```
-
-- ARIMA projects next-quarter macro inputs.  
-- Classifier assigns a regime based on those inputs.  
-- SHAP interprets the model’s decision.
+📌 Visuals:  
+- Regime probability timeline  
+- SHAP timeline of driver evolution  
+- Lead time detection chart
 
 ---
 
-## 🔍 Slide 8: SHAP Interpretability
+## 📊 Slide 13: Evaluation Strategy  
 
-| Type         | What It Explains                            |
-|--------------|----------------------------------------------|
-| Global SHAP  | Key features for each regime type            |
-| Local SHAP   | Feature importance for one prediction (e.g., Q4 2025) |
-
-📌 SHAP values are calculated post-classification using predicted or actual inputs.
-
-**Suggested Visuals:**  
-- Global SHAP bar chart  
-- Local SHAP force plot
+| Metric             | What It Tells Us                          |
+|--------------------|-------------------------------------------|
+| Accuracy / F1      | Core classification performance           |
+| Confusion Matrix   | Where regimes are most misclassified      |
+| Transition Matrix  | Model’s ability to detect regime switches |
+| Lead Time Curve    | How early model signals transition        |
+| SHAP Timeline      | Evolution of top drivers across time      |
 
 ---
 
-## 📤 Slide 9: Sample Output from the Model
+## 💼 Slide 14: Business Recommendations  
 
-| Quarter   | Regime       | Top Drivers (Local SHAP)       |
-|-----------|--------------|---------------------------------|
-| 2025 Q2   | Stability     | GDP Growth, Credit Conditions  |
-| 2025 Q3   | Slowdown      | Jobless Claims, Oil Prices     |
-| 2025 Q4   | Recession     | Durable Goods ↓, M2 ↓          |
-| 2026 Q1   | Recession     | CPI ↑, Jobless Claims ↑        |
-
-✅ Forecasts use **ARIMA-projected inputs**  
-✅ Explanations use **Local SHAP analysis**
+1. Use regime forecasts in **budgeting & planning cycles**  
+2. Alert leadership to **transition risks** (e.g. from Boom → Slowdown)  
+3. Integrate SHAP findings in **strategic review decks**  
+4. Deploy forecasts into a **live dashboard or alerting system**  
+5. Simulate “what-if” economic shocks for resilience planning  
 
 ---
 
-## 🧪 Slide 10: Evaluation & Validation
-
-| Metric             | Insight                                |
-|--------------------|----------------------------------------|
-| Accuracy / F1      | Regime classification performance      |
-| Confusion Matrix   | Type-specific errors                   |
-| Transition Matrix  | Predicting regime shifts               |
-| SHAP Timeline      | Drivers behind transitions             |
-| Lead Time Curve    | Early detection of upcoming changes    |
-
-✅ Successfully aligns with past recessions: 2001, 2008, 2020
-
----
-
-## 💼 Slide 11: Business Recommendations
-
-1. Embed ARMIS into executive dashboards.  
-2. Use predicted regimes to trigger **scenario planning**.  
-3. Establish alerts for rising recession probabilities.  
-4. Present SHAP-based drivers in internal strategy decks.  
-5. Run "what-if" simulations with hypothetical macro shocks.
-
-> Forecasts the **next economic state** — and explains **why**.
-
----
-
-## 🚀 Slide 12: Next Steps
+## 🚀 Slide 15: Next Steps  
 
 | Stage     | Action                                                |
 |-----------|--------------------------------------------------------|
-| Now       | Use ARIMA for real-time macro forecasting             |
-| Next      | Evaluate Seq2Seq, Prophet, Transformer alternatives   |
-| Later     | Extend ARMIS to domains: labor, housing, sectors      |
-| Ongoing   | Develop dashboard/API for live regime updates         |
-
-> Expand to **multi-step horizons** and broader economic modeling.
+| Now       | Finalize regime forecast outputs + master table        |
+| Next      | Test advanced models (e.g., Seq2Seq, Transformers)     |
+| Already   | Forecasting sectors: **labor, housing, consumer finance**  
+| Ongoing   | Build an API / web dashboard for external usability    |
 
 ---
 
-## ❓ Slide 13: Q&A
+## ❓ Slide 16: Q&A  
 
-> “The future isn’t binary — it’s a regime.
-ARMIS helps forecast it, explain it, and prepare for it.”
+> “The future isn’t binary — it’s a regime.  
+We forecast it, explain it, and prepare for it.”
 
-📍 [Suggested final image: compass, radar, or economic dashboard metaphor]
+📍 *[Optional background image: dashboard, compass, or radar metaphor]*
+
+---
 
