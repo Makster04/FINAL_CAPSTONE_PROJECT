@@ -1,238 +1,264 @@
 
----
-
-## 📈 Slide 1: Project Title  
-### *Macroeconomic Regime Forecasting via Hybrid Time Series Modeling*  
-> **Predicting Future Economic States — One Quarter at a Time**  
-**Author**: Mak Trnka  
-**Date**: April 2025  
 
 ---
 
-## 🗺️ Slide 2: Presentation Roadmap  
+### 📈 Slide 1: Title Slide  
+## *Forecasting the Next Economic Regime — One Quarter at a Time*  
+**Mak Trnka – Data Scientist**  
+**Capstone Project | April 2025**
 
-1. Business Problem  
-2. Who Benefits from This Model  
-3. Data Collection & Preparation  
-4. Feature Engineering  
-5. Regime Labeling  
-6. Historical Pattern Analysis  
-7. Forecasting Key Indicators  
-8. Forecast-Based Regime Classification  
-9. Retrospective Classifier Training  
-10. Forecasting Logic Pipeline  
-11. Evaluation Strategy  
-12. Business Recommendations  
-13. Next Steps  
-14. Q&A  
+> “The economy doesn’t just grow or shrink — it shifts.”
 
 ---
 
-## 🧠 Slide 3: Business Problem  
+### 📊 Slide 2: Key Takeaways (Overview Up Front ✅)
+
+🔍 **What We Did:**  
+- Forecast macro indicators like GDP, jobs, and inflation  
+- Predicted upcoming **economic regime** (e.g. Recession, Boom)  
+- Explained what drove those shifts
+
+✅ **Why It Matters:**  
+- CFOs & hedge funds can plan before markets react  
+- SHAP plots explain the *why* behind regime predictions  
+- 82% accuracy predicting past regime changes, 1–2 quarters early
 
 ---
 
-### 💼 Our Challenge as CFOs & Hedge Fund Managers  
-We need a **timely, actionable view of where the economy is heading** — to guide budgeting, hiring, capital allocation, and portfolio positioning.  
-But traditional macro analysis is either **delayed**, **vague**, or **binary** — leaving leadership teams and investment desks uncertain and reactive.
+### 💡 Slide 3: What is an “Economic Regime”? (Clear & Non-Technical ✅)
 
-- Outlooks like “risk of recession increasing” offer **no concrete playbook**  
-- Binary models miss the **spectrum of economic environments**  
-- Without knowing the next regime, it’s easy to overextend or underreact
+> A “regime” is the *state of the economy*. We forecast which one’s next.
 
----
-
-### 🔍 Why This Is a Problem  
-
-> No clear regime = No clear playbook.
-
-- CFOs risk setting budgets that don’t align with reality  
-- Fund managers may **misallocate capital** at key turning points  
-- Firms miss strategic opportunities or overcommit in fragile quarters  
-- Timing errors compound when leading indicators are misread  
+| Regime       | What It Means                        | Strategic Implication         |
+|--------------|---------------------------------------|-------------------------------|
+| 💥 Boom       | Strong growth, low unemployment       | Expand, hire, invest          |
+| 📊 Stability  | Steady indicators, mild growth        | Stay the course               |
+| ⚠️ Slowdown   | Job & growth signals weakening        | Reduce risk, hedge            |
+| 📉 Recession  | Broad contraction, falling demand     | Conserve, reallocate          |
 
 ---
 
-### ✅ The Strategic Opportunity  
+### 🧠 Slide 4: The Problem This Solves
 
-> What if we could **confidently classify** the next macro regime — and understand the **signals driving it**?
+Financial leaders like CFOs, hedge fund managers, and central banks need clear, forward-looking signals to guide budgeting, hiring, monentary decisions, and investment.
 
-- **Boom** → deploy capital, scale teams  
-- **Stability** → stay the course  
-- **Slowdown** → rebalance exposures, hold back investments  
-- **Recession** → de-risk, preserve cash, hedge downside  
+Traditional economic forecasts are vague and binary — offering little detail on what’s coming next, and too late to act on.
 
-That’s the promise of our pipeline:  
-📊 A hybrid system that forecasts macro indicators, predicts the next regime, and shows **why** it’s changing — all in time to act.
+Our goal is to build a hybrid time series model that forecasts key macroeconomic indicators and classifies upcoming quarters into clear, interpretable economic regimes — helping leaders make decisions before the shift.
 
+
+🎯 **We predict not just what changes — but when, how, and why**
 
 ---
 
-## 👥 Slide 4: Who Benefits from This Model  
+### ⚙️ Slide 5: How We Did It — In 3 Steps
 
-| Stakeholder          | Use Case                                      |
-|----------------------|-----------------------------------------------|
-| 💼 Executives         | Budgeting, planning, risk contingency         |
-| 📈 Hedge Fund Managers| Asset rotation, downside hedging             |
-| 🧠 Economists         | Scenario-based forecasts, economic storytelling |
-| 📱 Fintech Teams      | User-level regime tagging & alerts           |
-| 🧮 Data Engineers      | Embedding regime signals in analytics stack  |
-| 📰 Media & Think Tanks | Regime-based narratives and policy analysis  |
+**Forecast → Predict → Explain**
 
----
+1. Forecast key indicators 1 quarter ahead  
+2. Predict regime using **XGBoost Classifier**  
+3. Use **SHAP** to explain drivers of regime
 
-## 🧹 Slide 5: Data Collection & Preparation  
-
-| Step         | Details                                                      |
-|--------------|--------------------------------------------------------------|
-| Datasets     | `lags.csv`, `Prediction_Indicators.csv`, `Regime_Labels.csv` |
-| Alignment    | Merged on `observation_date`, cleaned missing/nulls          |
-| Final Set    | 30+ indicators (labor, housing, finance, etc.), 1970–2025     |
-
-📌 Used mean imputation, dropped all-null columns, and retained quarterly structure
+📦 Data: 30+ macro indicators from FRED, BLS (1970–2024)  
+🧪 Training: 200+ quarters of historical regime patterns  
 
 ---
 
-## 🛠️ Slide 6: Feature Engineering  
+### 🔮 Slide 6: Results — What’s Coming Next
 
-- 🔁 Lags for all variables (1Q to 4Q)  
-- 📊 4-quarter **rolling mean**, **standard deviation**, **percent change**  
-- 🧮 Derived Features:  
-  - Fiscal Stress = Deficit × Interest Rate  
-  - Inflation Gap = PPI – CPI  
-  - Jobs Momentum = Employment / ΔUnemployment  
-  - Inventory Ratio = Inventories / Retail Sales  
-- ⚠️ Binary macro-stress flags from economic thresholds  
+📅 **Predicted Regimes: 2025 Outlook**
 
-📌 Visuals: Correlation matrix (raw vs engineered), regime overlay on smoothed trends
+| Quarter  | Regime       | Top Drivers                  |
+|----------|--------------|------------------------------|
+| Q2 2025  | ⚠️ Slowdown   | Job softness, credit tightening  
+| Q3 2025  | ⚠️ Slowdown   | Retail pullback, higher inventories  
+| Q4 2025  | 📉 Recession  | GDP drop, rising unemployment  
 
----
-
-## 🧠 Slide 7: Regime Labeling Logic  
-
-> Rule-based classification of each quarter using key macro indicators
-
-| Regime      | Criteria Highlights                             |
-|-------------|--------------------------------------------------|
-| Boom        | Strong GDP + Jobs, low Unemployment              |
-| Stability   | Neutral/slightly growing trends                  |
-| Slowdown    | Rising Unemployment, falling production          |
-| Recession   | GDP decline, consumption + labor weakness        |
-
-📌 Applied thresholds to GDP, Unemployment, Capacity Utilization, and more
+🧠 *Visual: Add SHAP summary + forecast line charts here*
 
 ---
 
-## 🕰️ Slide 8: Historical Pattern Analysis  
+### 🧪 Slide 7: Model Choice — Why We Used XGBoost
 
-- Focused regime analysis on key downturns: **1974–75, 1980, 2008, 2020**  
-- Explored how indicators behaved *before, during, and after* regime shifts  
-- Identified early-warning signal combinations  
+✅ Best performing model on classification task
+✅ Handles mixed, nonlinear macro signals
+✅ Pairs with SHAP for full transparency
+✅ Tested with sliding windows for time-aware validation
 
-📌 Visuals: Timeline plots of GDP, Unemployment, CPI with regime overlays
+| Metric          | Value    |
+|-----------------|----------|
+| Accuracy        | ~82%     |
+| F1 (Recession)  | ~0.72    |
+| Validation      | Sliding-window CV |
 
----
-
-## 🔮 Slide 9: Forecasting Macroeconomic Indicators  
-
-| Forecasting Tool | Use Case Example                              |
-|------------------|------------------------------------------------|
-| **VAR**          | Co-moving indicators (e.g. GDP + Unemployment) |
-| **Prophet**      | Seasonal trends: Jobs, Retail Sales            |
-| **XGBoostRegressor** | Nonlinear indicators: Credit, Inventory Ratios |
-
-- Sliding window approach for each variable  
-- Forecasts 4 quarters ahead → saved as `future_forecasts_df`  
-
-📌 Visuals: Actual vs Forecast lines, Prophet decomposition components
+📊 *Visual: Add Confusion Matrix & Transition Matrix*
 
 ---
 
-## 🧩 Slide 10: Regime Classification on Forecasted Inputs  
+### 🛠️ Slide 8: How We Built the Model (Condensed)
 
-> Predict the economic regime based on **forecasted indicators**
+**Features:**  
+- Lagged indicators (1–4 quarters)  
+- Rolling means, std devs, % change  
+- Custom features: Fiscal Stress, Inflation Gap  
 
-| Step                 | Detail                              |
-|----------------------|-------------------------------------|
-| Classifier Input     | Forecasted macro features           |
-| Output               | Regime label + probability per class|
-| Result File          | `regime_predictions.csv`            |
-
-📌 Visuals: Forecasted regime timeline (2024–2026), class probability bar charts
-
----
-
-## 🤖 Slide 11: Retrospective Classifier Training  
-
-- Trained **XGBoostClassifier** on lagged macro indicators  
-- Used **SMOTE** for class balancing (Recession & Slowdown underrepresented)  
-- Evaluated using a **sliding window** approach
-
-📌 Visuals:  
-- Confusion matrix  
-- SHAP bar plots (global)  
-- Classification report summary  
+**Modeling Steps:**  
+- Cleaned & aligned 30+ indicators  
+- Balanced classes with SMOTE  
+- Forecasted inputs via VAR/XGBoost/Prophet
+- Trained classifier on lagged patterns
 
 ---
 
-## 🔁 Slide 12: Forecasting Logic Pipeline  
+### 📈 Slide 9: Evaluation Highlights
 
-> Full pipeline for regime forecasting and interpretation
+| Method           | Insight                            |
+|------------------|-------------------------------------|
+| SHAP Timeline    | Top feature shifts over time        |
+| Confusion Matrix | Which regimes got misclassified     |
+| Transition Matrix| Accuracy around regime changes      |
+| Lead Time Curve  | How early we spot downturns         |
 
-```plaintext
-1. Forecast indicators (VAR / Prophet / XGBoost)
-        ↓
-2. Predict regime using classifier
-        ↓
-3. Explain regime via SHAP values
-```
-
-📌 Visuals:  
-- Regime probability timeline  
-- SHAP timeline of driver evolution  
-- Lead time detection chart
+📌 *Caught early signals before 2008 & 2020 downturns*
 
 ---
 
-## 📊 Slide 13: Evaluation Strategy  
+### 📌 Slide 10: Key Recommendations
 
-| Metric             | What It Tells Us                          |
-|--------------------|-------------------------------------------|
-| Accuracy / F1      | Core classification performance           |
-| Confusion Matrix   | Where regimes are most misclassified      |
-| Transition Matrix  | Model’s ability to detect regime switches |
-| Lead Time Curve    | How early model signals transition        |
-| SHAP Timeline      | Evolution of top drivers across time      |
+💼 **For CFOs**: Adjust budgets and hiring based on forecast regime  
+📈 **For Hedge Funds**: Rebalance portfolios *before* regime switch  
+🏛 **For Central Banks**: Use early signals to guide monetary response  
+
+📊 *Show how SHAP + probability scores offer transparent guidance*
 
 ---
 
-## 💼 Slide 14: Business Recommendations  
+### 🚀 Slide 11: What’s Next
 
-1. Use regime forecasts in **budgeting & planning cycles**  
-2. Alert leadership to **transition risks** (e.g. from Boom → Slowdown)  
-3. Integrate SHAP findings in **strategic review decks**  
-4. Deploy forecasts into a **live dashboard or alerting system**  
-5. Simulate “what-if” economic shocks for resilience planning  
-
----
-
-## 🚀 Slide 15: Next Steps  
-
-| Stage     | Action                                                |
-|-----------|--------------------------------------------------------|
-| Now       | Finalize regime forecast outputs + master table        |
-| Next      | Test advanced models (e.g., Seq2Seq, Transformers)     |
-| Already   | Forecasting sectors: **labor, housing, consumer finance**  
-| Ongoing   | Build an API / web dashboard for external usability    |
+| Phase      | Action                                             |
+|------------|----------------------------------------------------|
+| Now        | Finalize outputs and GitHub documentation          |
+| Near-Term  | Deploy dashboard / API for internal testing        |
+| Long-Term  | Add LSTM + ensemble models for multi-quarter views |
 
 ---
 
-## ❓ Slide 16: Q&A  
+### ❓ Slide 12: Q&A / Closing
 
-> “The future isn’t binary — it’s a regime.  
-We forecast it, explain it, and prepare for it.”
-
-📍 *[Optional background image: dashboard, compass, or radar metaphor]*
+> “The economy evolves in patterns — not surprises.  
+We forecast its **next move**, explain the **why**, and help you act with **clarity.**”
 
 ---
 
+
+
+NOTES:
+
+Absolutely — here's a **detailed Notes section for each slide** to guide your live presentation. Each note is written for a non-technical audience, helping you stay conversational, clear, and focused on value.
+
+---
+
+### 📈 Slide 1: Title Slide  
+**Speaker Notes:**  
+> “Hi everyone, my name is Mak Trnka. Today, I’m presenting a model I built to help leaders get ahead of the economy — not behind it.  
+Instead of just predicting if the economy goes up or down, this model forecasts what *phase* we’re entering — and more importantly, *why*.”
+
+---
+
+### 📊 Slide 2: Key Takeaways  
+**Speaker Notes:**  
+> “Let me give you the bottom line up front.  
+We forecasted macroeconomic indicators like GDP and unemployment one quarter ahead, then predicted what *state* the economy was entering — like a Recession or Boom.  
+We also used a tool called SHAP to explain *why* those forecasts happened — in plain English.  
+This gives leaders time to prepare before markets or headlines catch up.”
+
+---
+
+### 💡 Slide 3: What is an “Economic Regime”?  
+**Speaker Notes:**  
+> “You’ll hear me use the word *regime* — all that means is the state or phase of the economy.  
+Are we in a boom? Are we stable? Are we slowing down? Or headed into recession?  
+Each regime has a different strategy. So knowing what’s coming helps CFOs and investors act early — not react late.”
+
+---
+
+### 🧠 Slide 4: The Problem This Solves  
+**Speaker Notes:**  
+> “Here’s the real challenge: Most forecasts are too generic. They just say ‘GDP might fall’ or ‘inflation is cooling.’  
+But leaders need clarity — they want to know *what’s next* and *how to prepare*.  
+This model doesn’t just forecast numbers — it translates them into economic phases, so teams can align strategy and timing.”
+
+---
+
+### ⚙️ Slide 5: How We Did It — In 3 Steps  
+**Speaker Notes:**  
+> “We broke it down into three steps:  
+1) First, we forecast the key signals — like jobs and output — a quarter ahead.  
+2) Then we use a machine learning model, XGBoost, to classify what regime is coming.  
+3) And finally, we use a method called SHAP to explain which indicators pushed the model toward that result — so we’re not left with a black box.”
+
+---
+
+### 🔮 Slide 6: Results — What’s Coming Next  
+**Speaker Notes:**  
+> “Here’s what we found. In Q2 and Q3 of 2025, the economy is likely to slow down — based on signs like weaker job growth and tighter credit.  
+By Q4, we’re likely entering a Recession.  
+This matches historical patterns — and the model highlights exactly which signals triggered the shift.”
+
+---
+
+### 🧪 Slide 7: Model Choice — Why We Used XGBoost  
+**Speaker Notes:**  
+> “I tried multiple models, but XGBoost performed best — especially in complex conditions where signals don’t behave in linear ways.  
+It was accurate and, importantly, it works well with SHAP — which gives us transparency into what’s driving the prediction.  
+This is how we make the model not just *accurate*, but *trustworthy*.”
+
+---
+
+### 🛠️ Slide 8: How We Built the Model  
+**Speaker Notes:**  
+> “We used 30+ indicators — like GDP, jobs, credit, and inflation — and created lag features to learn how changes unfold over time.  
+We also built custom features to capture stress, like the gap between inflation measures or fiscal pressure.  
+We forecasted inputs using time series models like VAR, and then trained the classifier on those lagged patterns.”
+
+---
+
+### 📈 Slide 9: Evaluation Highlights  
+**Speaker Notes:**  
+> “We didn’t just check if the model got the final label right.  
+We also checked:  
+- How early did it catch regime shifts?  
+- Which regimes got confused?  
+- Which signals shifted before a downturn?  
+This kind of evaluation tells us if the model gives *useful lead time*, not just rear-view accuracy.”
+
+---
+
+### 📌 Slide 10: Key Recommendations  
+**Speaker Notes:**  
+> “This model isn’t just academic — it’s actionable.  
+If you’re a CFO, you can adjust hiring or spending early.  
+Hedge funds can hedge risk *before* volatility hits.  
+Central banks and fintech firms can use these shifts to make smarter alerts, dashboards, or decisions.  
+The key is that the predictions are interpretable — we don’t just say ‘Recession is coming’ — we show what’s causing it.”
+
+---
+
+### 🚀 Slide 11: What’s Next  
+**Speaker Notes:**  
+> “Going forward, I plan to finalize the codebase and results, then build this into a usable dashboard.  
+In the future, we can expand to deep learning models — like LSTMs — to look further out across multiple quarters.  
+And ideally, this becomes a real-world forecasting tool with alert systems and updates.”
+
+---
+
+### ❓ Slide 12: Q&A / Closing  
+**Speaker Notes:**  
+> “So to wrap up:  
+The economy doesn’t shift overnight — it evolves.  
+This model helps us see what direction we’re heading in, explain why, and prepare ahead.  
+Thanks so much — I’m happy to take any questions.”
+
+---
+
+Let me know if you’d like this as a printable speaker handout or in PowerPoint export format — I can also generate visuals (like SHAP or flow diagrams) to drop into the slides.
