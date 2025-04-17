@@ -1,208 +1,119 @@
-Here’s your full **README** modeled after your NBA Trade project structure — tailored for your **Macroeconomic Regime Forecasting via Hybrid Time Series Modeling** capstone:
+# Macroeconomic Regime Forecasting via Hybrid Time Series Modeling
+
+## Business & Data Understanding
+
+### Business Problem
+Financial leaders—such as CFOs, hedge fund managers, and central banks—need clear, forward-looking insights into the economy to guide decisions. Traditional economic forecasts are vague, delayed, and difficult to interpret. Our goal was to create a forecasting pipeline that not only predicts the next economic phase but also explains why it’s happening.
+
+### Primary Stakeholders
+- **CFOs & Executives**: Adjust budgets, hiring, and capital planning based on regime predictions
+- **Hedge Fund Managers**: Adjust portfolio risk and sector allocations before markets react
+- **Central Banks & Policymakers**: Use regime indicators for monetary and fiscal planning
+- **Fintech Teams**: Integrate regime tagging into dashboards and alerting systems
+- **Economists & Think Tanks**: Use interpretable trends to tell stronger macroeconomic stories
+
+### Objective
+Build an interpretable, time-aware model to:
+- Forecast key macro indicators like GDP, Jobs, and Inflation one quarter ahead
+- Classify the upcoming economic regime: Boom, Stability, Slowdown, Recession
+- Use SHAP to provide transparency on what drives each prediction
 
 ---
 
-# 📈 Macroeconomic Regime Forecasting  
-### *Forecasting Future Economic States — One Quarter at a Time*
+## Data Understanding
+
+### Data Sources
+- Federal Reserve Economic Data (FRED)
+- Bureau of Labor Statistics (BLS)
+- Constructed Datasets:
+  - `lags.csv` (lagged indicators)
+  - `Prediction_Indicators.csv` (main inputs)
+  - `Regime_Labels.csv` (target labels)
+
+### Data Preparation Highlights
+- Merged datasets on `observation_date`
+- Dropped duplicates and fully null columns
+- Filled missing values with column means
+- 30+ macro indicators from 1970–2024
+- Engineered 25+ features per quarter (lags, rolling stats, stress indicators)
+- Tools: `pandas`, `sqlite3`, `sklearn`, `Prophet`, `XGBoost`, `matplotlib`, `shap`
 
 ---
 
-## 🧭 Overview
+## Modeling Pipeline
 
-### Business and Data Understanding
+### Forecasting Models (Step 1)
+Used three models depending on indicator type:
+- **VAR**: For interconnected variables (e.g. GDP & Unemployment)
+- **Prophet**: For seasonal indicators (e.g. Retail Sales, Jobs)
+- **XGBoostRegressor**: For volatile or nonlinear indicators (e.g. Credit spreads)
 
----
+Used **sliding window** forecasting to project 4 quarters ahead.
 
-### 💼 Business Problem  
-CFOs and hedge fund managers need a clear and timely way to anticipate **macroeconomic turning points** — to guide budgeting, hiring, capital allocation, and portfolio exposure.
+### Regime Classifier (Step 2)
+- Model: `XGBoostClassifier`
+- Features: Lagged indicators (1–4 quarters), rolling stats, engineered flags
+- SMOTE used for class balance
+- Validated using **sliding window cross-validation**
 
-Traditional macro analysis is often **delayed, vague, or binary**, leading to:
-
-- Missed transitions from expansion to contraction  
-- Misaligned investment decisions  
-- Outdated strategic plans mid-quarter
-
----
-
-### 👥 Primary Stakeholders
-
-| Stakeholder           | Use Case                                                     |
-|------------------------|--------------------------------------------------------------|
-| CFOs & Executives       | Align budgets, hiring, and pricing with the macro cycle      |
-| Hedge Fund Managers     | Adjust risk, rotate portfolios, and time entries/exits       |
-| Strategy & IR Teams     | Tailor communication to regime trends and leading indicators |
-| Central Bank Analysts   | Monitor shifts in economic momentum and sectoral stress      |
-| Fintech/Product Teams   | Tag users’ environment with macro-contextual overlays        |
+### Interpretability (Step 3)
+- Used **SHAP** to understand feature influence for each regime prediction
+- Delivered both local (quarter-level) and global (over-time) explanations
 
 ---
 
-## 🎯 Objective  
-Build a hybrid time-series forecasting pipeline that can:
+## Evaluation
 
-- Forecast key macroeconomic indicators using appropriate models (VAR, Prophet, XGBoost)  
-- Predict the **next macroeconomic regime**: Boom, Stability, Slowdown, or Recession  
-- Provide **interpretable outputs** through SHAP and historical timelines  
-- Enable leadership teams to act *before* transitions occur
+### Key Metrics
+| Metric             | Value      |
+|--------------------|------------|
+| Accuracy           | ~82%       |
+| F1 Score (Recession)| ~0.72     |
+| Lead Time Detected | ~3 Quarters|
 
----
-
-## 📊 Data Understanding  
-
-### 📁 Data Sources
-
-- `lags.csv`: Pre-processed macroeconomic features and engineered lags  
-- `Prediction_Indicators.csv`: Raw macroeconomic signals (labor, housing, consumer finance, etc.)  
-- `Regime_Labels.csv`: Rule-based regime classifications per quarter  
-
-### 🔧 Data Preparation Highlights
-
-- Merge datasets on `observation_date`  
-- Drop duplicate and null-only columns  
-- Impute missing values with column means  
-- Final dataset: 30+ indicators, 250+ features, quarterly from 1970 to 2025  
-
-**Tools/Libraries**: `pandas`, `numpy`, `matplotlib`, `statsmodels`, `prophet`, `xgboost`, `shap`, `sklearn`
+### Evaluation Visuals
+- **Confusion Matrix**: Stable & Boom well-predicted, some confusion between Recession vs Slowdown
+- **Transition Matrix**: Strong performance in predicting correct regime shifts
+- **SHAP Timeline**: Showed driver evolution leading into 2008 & 2020 downturns
+- **Lead Time Curve**: Detected downturns 2–3 quarters before actual switch
 
 ---
 
-## 🏗️ Modeling Approach
+## Key Recommendations
+
+| Role         | Recommendation                                    |
+|--------------|----------------------------------------------------|
+| CFOs         | Adjust budgets and hiring plans early              |
+| Hedge Funds  | Rebalance portfolios before regime shifts          |
+| Central Banks| Use forecasts to inform monetary policy timelines  |
+| Fintech Teams| Build alert systems using forecasted regimes       |
+| Economists   | Use SHAP insights for storytelling and reports     |
 
 ---
 
-### 🔁 Step 1: Feature Engineering
+## 🔮 Next Steps
 
-- **Lag Features**: 1 to 4 quarters per macro variable  
-- **Rolling Stats**: 4-quarter rolling mean, std, and % change  
-- **Derived Metrics**:  
-  - *Fiscal Stress* = Deficit × Interest Rate  
-  - *Jobs Momentum* = Jobs / ΔUnemployment  
-  - *Inventory Ratio* = Inventories / Retail Sales  
-  - *Inflation Gap* = PPI – CPI  
-  - *Macro Stress Flags* = Binary indicators on thresholds  
+| Phase      | Action                                             |
+|------------|----------------------------------------------------|
+| **Now**        | Finalize outputs and GitHub documentation          |
+| **Near-Term**  | Deploy dashboard / API for internal testing        |
+| **Long-Term**  | Add LSTM + ensemble models for multi-quarter views |
 
----
-
-### 🧠 Step 2: Regime Labeling
-
-- Rule-based logic using GDP, unemployment, production, capacity utilization  
-- Four distinct regimes:
-  - **Boom**: Growth with low risk  
-  - **Stability**: Steady, predictable environment  
-  - **Slowdown**: Rising stress with slowing indicators  
-  - **Recession**: Clear contraction
+Additional Future Ideas:
+- Add **counterfactual simulations** to explore "What if" scenarios
+- Extend model to simulate policy changes or sector-specific impacts
+- Incorporate **real-time data pipelines** for live regime alerts
 
 ---
 
-### 📈 Step 3: Forecasting Macroeconomic Indicators
-
-| Model               | Use Case Example                          |
-|--------------------|--------------------------------------------|
-| **VAR**            | Co-dependent series (GDP + Unemployment)   |
-| **Prophet**        | Seasonality and trend (Jobs, Retail Sales) |
-| **XGBoostRegressor** | Nonlinear indicators (Credit, Inventories) |
-
-- Sliding window forecast over the last 4 quarters  
-- Forecast horizon: next 4 quarters  
-- Output stored as `future_forecasts_df`
+## Project Assets
+- `forecast_pipeline.py`: Main logic for forecasting + classification
+- `regime_predictions.csv`: Output regime results with probabilities
+- `future_forecasts_df.csv`: Forecasted indicators for future quarters
+- `shap_outputs/`: Global & local SHAP explanations
+- `evaluation_metrics.txt`: Accuracy, F1, confusion, and lead time summaries
 
 ---
 
-### 🧩 Step 4: Regime Classification  
-
-- Use trained XGBoostClassifier to predict regime from forecasted features  
-- Outputs:
-  - Predicted Regime  
-  - Class Probabilities  
-  - Feature attribution via **SHAP values**  
-- Stored in `regime_predictions.csv`
-
----
-
-## 🔍 Interpretability & Evaluation
-
----
-
-### 📊 Transparency Techniques
-
-| Tool           | Insight                                       |
-|----------------|-----------------------------------------------|
-| SHAP (Global)  | Regime-specific top features                  |
-| SHAP (Local)   | Drivers of a specific quarterly prediction     |
-| Timeline Drift | Feature importance changes over time          |
-| Transition Matrix | Model accuracy around regime shifts        |
-
-### 📋 Model Performance
-
-- **Confusion Matrix**: Identify misclassifications  
-- **Transition-F1**: Measure regime-switch detection accuracy  
-- **Lead Time Curve**: Show how early regime changes are predicted  
-
-📈 SHAP Examples:  
-- Red = features pushing towards Recession (e.g. Credit Spread ↑)  
-- Blue = features pulling towards Boom (e.g. GDP ↑, M2 ↑)
-
----
-
-## 📤 Sample Output
-
-| Quarter   | Regime       | Top Drivers (SHAP)                   |
-|-----------|--------------|---------------------------------------|
-| 2025 Q2   | Stability     | GDP ↑, Credit Spread ↓               |
-| 2025 Q3   | Slowdown      | Jobless Claims ↑, M2 ↓               |
-| 2025 Q4   | Recession     | CPI ↑, Durable Goods ↓               |
-| 2026 Q1   | Recession     | Inventories ↑, Jobs Momentum ↓      |
-
----
-
-## 🧪 Evaluation
-
-### Strengths
-
-- Hybrid model tailors forecasting to each indicator  
-- Transparent classification with full SHAP interpretability  
-- Matches key real-world downturns: 2001, 2008, 2020  
-- Tracks and explains feature shifts over time  
-
-### Challenges
-
-- Class imbalance required SMOTE  
-- Forecast accuracy varies by indicator type  
-- High dependence on historical data quality  
-
----
-
-## 🚀 Next Steps  
-
-| Stage     | Action                                                |
-|-----------|--------------------------------------------------------|
-| ✅ Now     | Finalize master forecast table + regime outputs        |
-| 🔬 Next    | Evaluate Seq2Seq or Transformer forecasting models     |
-| 📦 Already | Using labor, housing, and consumer finance indicators |
-| 🌐 Ongoing | Build dashboard/API for real-time regime updates      |
-
----
-
-## 💼 Business Recommendations  
-
-- **Unclear forecasts → Clear regime signals**  
-  Support quarterly planning and portfolio positioning  
-
-- **Vague guidance → Interpretable insights**  
-  Use SHAP to show what’s driving the regime  
-
-- **Binary models → 4-regime nuance**  
-  Customize strategy per Boom, Stability, Slowdown, Recession  
-
-- **Lagging alerts → Early warnings**  
-  Lead Time Curve reveals turning points *before* they hit  
-
----
-
-## ✅ Conclusion  
-This regime forecasting system empowers CFOs and hedge fund managers with a **transparent, timely, and explainable signal** of what’s coming next in the economy.
-
-By combining time series forecasting with regime classification and SHAP-based interpretability, this project delivers a **scalable solution** for macro risk management, financial planning, and capital deployment.
-
-> Forecast the future. Explain the why. Act before it’s too late.
-
----
+## Conclusion
+This model bridges the gap between economic forecasting and real-world strategy. It empowers decision-makers to take action before downturns arrive — and provides clear reasoning behind every prediction. With strong lead time, interpretability, and extensibility, this pipeline can serve as the foundation for smarter fiscal, monetary, and investment decisions.
